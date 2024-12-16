@@ -90,7 +90,7 @@ for col in categorical_columns:
     X_test[col] = X_test[col].fillna('Unknown')
 
 # Encode Categorical Variables
-encoder = OneHotEncoder(handle_unknown="ignore", sparse=False)
+encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)  # Updated argument
 X_train_encoded = encoder.fit_transform(X_train[categorical_columns])
 X_test_encoded = encoder.transform(X_test[categorical_columns])
 
@@ -101,6 +101,7 @@ X_test_encoded = pd.DataFrame(X_test_encoded, columns=encoder.get_feature_names_
 # Combine Encoded Data with Numeric Columns
 X_train = pd.concat([X_train.drop(columns=categorical_columns), X_train_encoded], axis=1)
 X_test = pd.concat([X_test.drop(columns=categorical_columns), X_test_encoded], axis=1)
+
 
 st.write("### Train Set After Encoding:")
 st.dataframe(X_train.head())

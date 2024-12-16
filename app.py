@@ -52,14 +52,37 @@ st.write(f"Test Set Size: {test_set.shape[0]} rows")
 
 # Step 4: Encoding Categorical Variables
 st.header("Step 4: Encoding Categorical Variables")
-categorical_columns = ['Carrosserie', 'fuel_type', 'Gearbox']
-encoder = OneHotEncoder(sparse=False, handle_unknown="ignore")
-encoded_train = pd.DataFrame(encoder.fit_transform(train_set[categorical_columns]))
-encoded_test = pd.DataFrame(encoder.transform(test_set[categorical_columns]))
 
-# Concatenate Encoded Columns
-train_set = pd.concat([train_set.reset_index(drop=True), encoded_train], axis=1).drop(columns=categorical_columns)
-test_set = pd.concat([test_set.reset_index(drop=True), encoded_test], axis=1).drop(columns=categorical_columns)
+# Select categorical columns
+categorical_columns = ['Carrosserie', 'fuel_type', 'Gearbox']
+
+# Check for missing values in categorical columns
+for col in categorical_columns:
+    if df[col].isnull().any():
+        st.warning(f"Missing values detected in {col}. Filling with 'Unknown'.")
+        df[col] = df[col].fillna('Unknown')
+
+try:
+    # Initialize OneHotEncoder
+    encoder = OneHotEncoder(sparse_output=False, handle_unknown="ignore")  # For newer scikit-learn
+    encoded_train = encoder.fit_transform(train_set[categorical_columns])
+    encoded_test = encoder.transform(test_set[categorical_columns])
+
+    # Convert to DataFrame with column names
+    encoded_train_df = pd.DataFrame(encoded_train, columns=encoder.get_feature_names_out(categorical_columns))
+    encoded_test_df = pd.DataFrame(encoded_test, columns=encoder.get_feature_names_out(categorical_columns))
+
+    # Reset indices and concatenate encoded data
+    train_set = pd.concat([train_set.reset_index(drop=True), encoded_train_df], axis=1).drop(columns=categorical_columns)
+    test_set = pd.concat([test_set.reset_index(drop=True), encoded_test_df], axis=1).drop(columns=categorical_columns)
+
+    st.success("Categorical encoding completed successfully!")
+    st.write("### Train Set After Encoding:")
+    st.dataframe(train_set.head())
+
+except Exception as e:
+    st.error(f"Error during OneHotEncoding: {e}")
+    st.stop()
 
 # Step 5: Scaling Numerical Features
 st.header("Step 5: Scaling Numerical Features")

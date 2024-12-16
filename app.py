@@ -119,58 +119,76 @@ st.write("### Train Set After Scaling:")
 st.dataframe(X_train.head())
 
 # Step 6: Model Training
-# Drop non-numeric columns
-numeric_X_train = X_train.select_dtypes(include=[np.number])
+# Drop non-numeric columns from X_train and X_test
+non_numeric_columns = ['Model_UTAC', 'Commercial_name', 
+                       'Code_National_Identification_Type', 'Type_Variante_Version(TVV)', 
+                       'Champ_V9']
+X_train = X_train.drop(columns=non_numeric_columns)
+X_test = X_test.drop(columns=non_numeric_columns)
 
-# Check for non-numeric columns
-non_numeric_columns = X_train.select_dtypes(exclude=[np.number]).columns.tolist()
-st.write(f"Non-numeric columns in X_train: {non_numeric_columns}")
+# Define necessary columns
+required_columns = ['brand', 'Model_file', 'range', 'Group', 'Country']
 
-# Fill NaN values in numeric columns
-X_train[numeric_X_train.columns] = numeric_X_train.fillna(numeric_X_train.mean())
-
-# Check for remaining NaN values
-st.write(f"Remaining NaN in X_train: {X_train.isnull().sum().sum()}")
-
-# Convert y_train to numeric
-if not np.issubdtype(y_train.dtype, np.number):
-    try:
-        y_train = y_train.astype(float)
-    except ValueError:
-        label_mapping = {label: idx for idx, label in enumerate(y_train.unique())}
-        y_train = y_train.map(label_mapping)
-        st.write("Mapped y_train labels to numeric:", label_mapping)
-# Verify consistency
-st.write(f"Shape of X_train: {X_train.shape}")
-st.write(f"Shape of y_train: {y_train.shape}")
-
-if X_train.shape[0] != y_train.shape[0]:
-    st.error("Mismatch between number of samples in X_train and y_train.")
+# Check for missing columns in X_train
+missing_required_columns = [col for col in required_columns if col not in X_train.columns]
+if missing_required_columns:
+    st.error(f"The following required columns are missing: {missing_required_columns}")
     st.stop()
-# Model Training
-try:
-    model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
-    st.write("Model training completed successfully!")
-except Exception as e:
-    st.error(f"Error during model training: {e}")
-# Save processed datasets
-X_train.to_csv("processed_train_set.csv", index=False)
-X_test.to_csv("processed_test_set.csv", index=False)
 
-# Add download buttons
-with open("processed_train_set.csv", "rb") as file:
-    st.download_button("Download Processed Train Set", file, "processed_train_set.csv")
+# Fill missing values in required columns
+for col in required_columns:
+    X_train[col] = X_train[col].fillna("Unknown")
+    X_test[col] = X_test[col].fillna("Unknown")
 
-with open("processed_test_set.csv", "rb") as file:
-    st.download_button("Download Processed Test Set", file, "processed_test_set.csv")
+# Encode necessary categorical columns
+categorical_encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+X_train_encoded = categorical_encoder.fit_transform(X_train[required_columns])
+X_test_encoded = categorical_encoder.transform(X_test[required_columns])
+
+# Convert to DataFrame
+encoded_train_df = pd.DataFrame(X_train_encoded, columns=categorical_encoder.get_feature_names_out(required_columns), index=X_train.index)
+encoded_test_df = pd.DataFrame(X_test_encoded, columns=categorical_encoder.get_feature_names_out(required_columns), index=X_test.index)
+
+# Combine with the rest of the dataset
+X_train = pd.concat([X_train.drop(columns=required_columns), encoded_train_df], axis=1)
+X_test = pd.concat([X_test.drop(columns=required_columns), encoded_test_df], axis=1)
+
+# Verify results
+st.write("### Train Set After Encoding Required Columns:")
+st.dataframe(X_train.head())
+st.write("### Test Set After Encoding Required Columns:")
+st.dataframe(X_test.head())
+
+# Fill any remaining NaN values
+X_train = X_train.fillna(X_train.mean())
+X_test = X_test.fillna(X_test.mean())
+
+# Verify dataset integrity
+st.write(f"Remaining NaN in X_train: {X_train.isnull().sum().sum()}")
+if X_train.isnull().any().any():
+    st.error("NaN values still present in `X_train`. Please debug.")
+    st.stop()
+
+# Scale numerical columns
+numerical_columns = ['Consumption_mix(l/100km)', 'CO2', 'power_maximal (kW)', 'Empty_mass_min(kg)']
+scaler = StandardScaler()
+X_train[numerical_columns] = scaler.fit_transform(X_train[numerical_columns])
+X_test[numerical_columns] = scaler.transform(X_test[numerical_columns])
+
+# Verify final dataset
+st.write("### Final Train Set After Scaling:")
+st.dataframe(X_train.head())
 
 
 st.header("Step 6: Model Training")
+# Model Selection
+# Map target labels
+label_mapping = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5, "G": 6}
+y_train = y_train.map(label_mapping)
+y_test = y_test.map(label_mapping)
 
 # Model Selection
 model_choice = st.selectbox("Select a Model", ["Logistic Regression", "Random Forest", "Decision Tree"])
-
 if model_choice == "Logistic Regression":
     model = LogisticRegression(max_iter=1000)
 elif model_choice == "Random Forest":
@@ -178,9 +196,20 @@ elif model_choice == "Random Forest":
 else:
     model = DecisionTreeClassifier(max_depth=10, random_state=42)
 
-# Train the Model
+# Train the model
 model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
+
+# Evaluate the model
+st.write(f"Model Accuracy: {accuracy_score(y_test, y_pred):.2f}")
+st.text("Classification Report:")
+st.text(classification_report(y_test, y_pred))
+
+# Confusion Matrix
+fig, ax = plt.subplots()
+ConfusionMatrixDisplay.from_estimator(model, X_test, y_test, cmap="Blues", ax=ax)
+st.pyplot(fig)
+
 
 # Step 7: Model Evaluation
 st.header("Step 7: Model Evaluation")

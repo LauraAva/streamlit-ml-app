@@ -169,6 +169,19 @@ st.dataframe(train_set.head())
 st.write("### Test Set Preview:")
 st.dataframe(test_set.head())
 
+######before encoding
+st.header("before encoding")
+# Ensure categorical columns have no NaNs or invalid data
+for col in categorical_columns:
+    if train_set[col].isnull().any():
+        train_set[col] = train_set[col].fillna("Unknown")
+    if test_set[col].isnull().any():
+        test_set[col] = test_set[col].fillna("Unknown")
+
+# Ensure categorical columns are strings
+train_set[categorical_columns] = train_set[categorical_columns].astype(str)
+test_set[categorical_columns] = test_set[categorical_columns].astype(str)
+
 # Step 4: Encoding Categorical Variables
 st.header("Step 4: Encoding Categorical Variables")
 

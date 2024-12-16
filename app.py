@@ -138,39 +138,52 @@ test_set['Particles'].fillna(mean_particles_train, inplace=True)
 
 ###Check 
 
-st.write("### Columns in Train Set:")
-st.write(train_set.columns.tolist())
-st.write("### Columns in Test Set:")
-st.write(test_set.columns.tolist())
+st.write("### Train Set Preview:")
+st.dataframe(train_set.head())
 
-available_categorical_columns = [col for col in categorical_columns if col in train_set.columns]
-if not available_categorical_columns:
-    st.error("No valid categorical columns found for encoding.")
-    st.stop()
+st.write("### Test Set Preview:")
+st.dataframe(test_set.head())
+st.write("### Train Set Preview:")
+st.dataframe(train_set.head())
 
+st.write("### Test Set Preview:")
+st.dataframe(test_set.head())
+
+# Step 4: Encoding Categorical Variables
 # Step 4: Encoding Categorical Variables
 st.header("Step 4: Encoding Categorical Variables")
 
-# Select categorical columns
+# Debugging: Display column names
+st.write("### Columns in Train and Test Sets:")
+st.write("Train Set Columns:", train_set.columns.tolist())
+st.write("Test Set Columns:", test_set.columns.tolist())
+
+# Ensure categorical columns are in the dataset
 categorical_columns = ['Carrosserie', 'fuel_type', 'Gearbox']
 
-# Check for missing values in categorical columns
-for col in categorical_columns:
-    if df[col].isnull().any():
-        st.warning(f"Missing values detected in {col}. Filling with 'Unknown'.")
-        df[col] = df[col].fillna('Unknown')
+missing_columns = [col for col in categorical_columns if col not in train_set.columns or col not in test_set.columns]
+if missing_columns:
+    st.error(f"The following columns are missing from the dataset: {missing_columns}")
+    st.stop()
 
+# Fill missing values in categorical columns
+for col in categorical_columns:
+    if train_set[col].isnull().any() or test_set[col].isnull().any():
+        st.warning(f"Missing values detected in {col}. Filling with 'Unknown'.")
+        train_set[col] = train_set[col].fillna('Unknown')
+        test_set[col] = test_set[col].fillna('Unknown')
+
+# Encode categorical columns
 try:
-    # Initialize OneHotEncoder
-    encoder = OneHotEncoder(sparse_output=False, handle_unknown="ignore")  # For newer scikit-learn
+    encoder = OneHotEncoder(sparse_output=False, handle_unknown="ignore")
     encoded_train = encoder.fit_transform(train_set[categorical_columns])
     encoded_test = encoder.transform(test_set[categorical_columns])
 
-    # Convert to DataFrame with column names
+    # Convert to DataFrame with proper column names
     encoded_train_df = pd.DataFrame(encoded_train, columns=encoder.get_feature_names_out(categorical_columns))
     encoded_test_df = pd.DataFrame(encoded_test, columns=encoder.get_feature_names_out(categorical_columns))
 
-    # Reset indices and concatenate encoded data
+    # Concatenate encoded columns with the original datasets
     train_set = pd.concat([train_set.reset_index(drop=True), encoded_train_df], axis=1).drop(columns=categorical_columns)
     test_set = pd.concat([test_set.reset_index(drop=True), encoded_test_df], axis=1).drop(columns=categorical_columns)
 
@@ -181,6 +194,7 @@ try:
 except Exception as e:
     st.error(f"Error during OneHotEncoding: {e}")
     st.stop()
+
 
 # Step 5: Scaling Numerical Features
 st.header("Step 5: Scaling Numerical Features")

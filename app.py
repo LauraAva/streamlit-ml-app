@@ -33,25 +33,6 @@ except Exception as e:
     st.error(f"Error loading the dataset: {e}")
     st.stop()
     
-st.header("X_TRAIN NOT DEFINED")
-if target_column not in train_set.columns:
-    st.error(f"Target column '{target_column}' not found in the dataset.")
-    st.stop()
-
-# Ensure numeric features only
-X_train = train_set.drop(columns=[target_column]).select_dtypes(include=[np.number])
-y_train = train_set[target_column]
-X_test = test_set.drop(columns=[target_column]).select_dtypes(include=[np.number])
-y_test = test_set[target_column]
-
-# Handle missing values
-X_train = X_train.fillna(X_train.mean())
-X_test = X_test.fillna(X_test.mean())
-
-st.write("### Features and Target Split Completed!")
-st.write(f"X_train shape: {X_train.shape}")
-st.write(f"X_test shape: {X_test.shape}")
-
 
 #Step 2 &3
 st.header("Step 2: Data Cleaning and Integrity Check")
@@ -83,10 +64,14 @@ df['hcnox'] = df['hcnox'].fillna(df['hcnox'].mean())
 st.write("### Missing Values After Cleaning (Pre-Split):")
 st.write(df[['hc', 'nox', 'hcnox']].isnull().sum())
 
-# 2. Split Dataset Safely with Copies
+# 2. Split Dataset 
 st.write("### Splitting Data")
-train_set, test_set = train_test_split(df.copy(), test_size=0.2, random_state=42)
-
+  # Train-test Split
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        st.write("Training and Test Sets Prepared!")
+        st.write(f"Training Set Size: {X_train.shape[0]}")
+        st.write(f"Test Set Size: {X_test.shape[0]}")
+        
 
 # Final Safety Net: Refill Missing Values After Splitting
 mean_hc = train_set['hc'].mean()
@@ -183,6 +168,24 @@ train_set[categorical_columns] = train_set[categorical_columns].astype(str)
 test_set[categorical_columns] = test_set[categorical_columns].astype(str)
 
 # Step 4: Encoding Categorical Variables
+  # Feature Encoding
+        st.subheader("Feature Encoding:")
+        categorical_cols = st.multiselect("Select Categorical Columns to Encode:", options=X.columns)
+        if categorical_cols:
+            encoder = OneHotEncoder()
+            X_train_encoded = encoder.fit_transform(X_train[categorical_cols]).toarray()
+            X_test_encoded = encoder.transform(X_test[categorical_cols]).toarray()
+            st.write("Feature Encoding Completed!")
+        
+        # Standardize Numerical Columns
+        st.subheader("Feature Scaling:")
+        numerical_cols = st.multiselect("Select Numerical Columns to Standardize:", options=X.columns)
+        if numerical_cols:
+            scaler = StandardScaler()
+            X_train[numerical_cols] = scaler.fit_transform(X_train[numerical_cols])
+            X_test[numerical_cols] = scaler.transform(X_test[numerical_cols])
+            st.write("Feature Scaling Completed!")
+
 st.header("Step 4: Encoding Categorical Variables")
 
 # Debugging: Display column names

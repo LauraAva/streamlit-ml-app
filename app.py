@@ -32,42 +32,60 @@ try:
 except Exception as e:
     st.error(f"Error loading the dataset: {e}")
     st.stop()
+    
+#Step 2 &3
 
-# Step 2: Data Cleaning
 st.header("Step 2: Data Cleaning")
-st.write("### Filling Missing Values")
-# Function to iteratively fill missing values in hc, nox, hcnox
-def fill_missing_values(df, col_hc, col_nox, col_hcnox):
-    for _ in range(5):  # Apply iteratively for robust filling
-        # Fill 'hcnox' where 'hc' and 'nox' are known
-        mask_hcnox = pd.isna(df[col_hcnox]) & pd.notna(df[col_hc]) & pd.notna(df[col_nox])
-        df.loc[mask_hcnox, col_hcnox] = df.loc[mask_hcnox, col_hc] + df.loc[mask_hcnox, col_nox]
 
-        # Fill 'hc' where 'hcnox' and 'nox' are known
-        mask_hc = pd.isna(df[col_hc]) & pd.notna(df[col_nox]) & pd.notna(df[col_hcnox])
-        df.loc[mask_hc, col_hc] = df.loc[mask_hc, col_hcnox] - df.loc[mask_hc, col_nox]
-
-        # Fill 'nox' where 'hcnox' and 'hc' are known
-        mask_nox = pd.isna(df[col_nox]) & pd.notna(df[col_hc]) & pd.notna(df[col_hcnox])
-        df.loc[mask_nox, col_nox] = df.loc[mask_nox, col_hcnox] - df.loc[mask_nox, col_hc]
-
-st.write("### Cleaned Dataset Preview:")
-st.dataframe(df.head())
-
-# Step 3: Splitting Data
-st.header("Step 3: Splitting Data")
 # Train-Test Split
 train_set, test_set = train_test_split(df, test_size=0.2, random_state=42)
 train_set = train_set.reset_index(drop=True)
 test_set = test_set.reset_index(drop=True)
 
-# Apply Missing Value Function
+# Function to iteratively fill missing values in hc, nox, hcnox
+def fill_missing_values(df, col_hc, col_nox, col_hcnox):
+    for _ in range(5):  # Apply iteratively
+        mask_hcnox = pd.isna(df[col_hcnox]) & pd.notna(df[col_hc]) & pd.notna(df[col_nox])
+        df.loc[mask_hcnox, col_hcnox] = df.loc[mask_hcnox, col_hc] + df.loc[mask_hcnox, col_nox]
+
+        mask_hc = pd.isna(df[col_hc]) & pd.notna(df[col_nox]) & pd.notna(df[col_hcnox])
+        df.loc[mask_hc, col_hc] = df.loc[mask_hc, col_hcnox] - df.loc[mask_hc, col_nox]
+
+        mask_nox = pd.isna(df[col_nox]) & pd.notna(df[col_hc]) & pd.notna(df[col_hcnox])
+        df.loc[mask_nox, col_nox] = df.loc[mask_nox, col_hcnox] - df.loc[mask_nox, col_hc]
+
+# Apply iterative filling
+st.write("### Applying Iterative Missing Value Filling for hc, nox, hcnox")
 fill_missing_values(train_set, 'hc', 'nox', 'hcnox')
 fill_missing_values(test_set, 'hc', 'nox', 'hcnox')
 
-# Final Filling with Mean for Remaining Missing Values
-train_set.fillna({'hc': train_set['hc'].mean(), 'nox': train_set['nox'].mean(), 'hcnox': train_set['hcnox'].mean()}, inplace=True)
-test_set.fillna({'hc': test_set['hc'].mean(), 'nox': test_set['nox'].mean(), 'hcnox': test_set['hcnox'].mean()}, inplace=True)
+# Debug Step: Check remaining missing values
+st.write("Remaining Missing Values (Train Set) after Iterative Filling:")
+st.write(train_set[['hc', 'nox', 'hcnox']].isnull().sum())
+
+st.write("Remaining Missing Values (Test Set) after Iterative Filling:")
+st.write(test_set[['hc', 'nox', 'hcnox']].isnull().sum())
+
+# Final Filling with Mean
+st.write("### Final Mean Imputation for Remaining Missing Values")
+train_set.fillna({
+    'hc': train_set['hc'].mean(),
+    'nox': train_set['nox'].mean(),
+    'hcnox': train_set['hcnox'].mean()
+}, inplace=True)
+
+test_set.fillna({
+    'hc': train_set['hc'].mean(),  # Use training mean to avoid leakage
+    'nox': train_set['nox'].mean(),
+    'hcnox': train_set['hcnox'].mean()
+}, inplace=True)
+
+# Debug Step: Verify all missing values are resolved
+st.write("Final Missing Values in Train Set:")
+st.write(train_set[['hc', 'nox', 'hcnox']].isnull().sum())
+
+st.write("Final Missing Values in Test Set:")
+st.write(test_set[['hc', 'nox', 'hcnox']].isnull().sum())
 
 # Clean 'Particles' Column with Mean
 mean_particles_train = train_set['Particles'].mean()

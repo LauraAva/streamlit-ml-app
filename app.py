@@ -81,8 +81,6 @@ test_set['hc'].fillna(mean_hc, inplace=True)
 test_set['nox'].fillna(mean_nox, inplace=True)
 test_set['hcnox'].fillna(mean_hcnox, inplace=True)
 
-st.write("### Final Missing Values in Train Set:")
-st.write(train_set[['hc', 'nox', 'hcnox']].isnull().sum())
 
 # Save the processed train and test sets for further analysis
 train_set.to_csv("final_train_set.csv", index=False)
@@ -95,18 +93,6 @@ st.write("Train and Test sets saved as `final_train_set.csv` and `final_test_set
 mean_particles_train = train_set['Particles'].mean()
 train_set['Particles'].fillna(mean_particles_train, inplace=True)
 test_set['Particles'].fillna(mean_particles_train, inplace=True)
-
-# Verify Missing Values
-st.write("### Missing Values in Train Set After Cleaning:")
-st.write(train_set.isnull().sum())
-
-st.write("### Missing Values in Test Set After Cleaning:")
-st.write(test_set.isnull().sum())
-st.write("Final Missing Values in Train Set:")
-st.write(train_set.isnull().sum())
-
-st.write("Final Missing Values in Test Set:")
-st.write(test_set.isnull().sum())
 
 
 # Step 4: Encoding Categorical Variables

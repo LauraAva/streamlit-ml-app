@@ -34,57 +34,75 @@ except Exception as e:
     st.stop()
     
 #Step 2 &3
-st.header("Step 2: Data Cleaning")
+st.header("Step 2: Data Cleaning and Integrity Check")
 
-# Train-Test Split
-train_set, test_set = train_test_split(df, test_size=0.2, random_state=42)
-train_set = train_set.reset_index(drop=True)
-test_set = test_set.reset_index(drop=True)
+# 1. Full Dataset Cleaning Before Splitting
+st.write("### Initial Missing Values Check:")
+st.write(df[['hc', 'nox', 'hcnox']].isnull().sum())
 
-# Function to iteratively fill missing values in hc, nox, hcnox
 def fill_missing_values(df, col_hc, col_nox, col_hcnox):
-    for _ in range(5):  # Apply iteratively
-        mask_hcnox = pd.isna(df[col_hcnox]) & pd.notna(df[col_hc]) & pd.notna(df[col_nox])
+    # Iteratively fill missing values
+    for _ in range(5):
+        mask_hcnox = df[col_hcnox].isna() & df[col_hc].notna() & df[col_nox].notna()
         df.loc[mask_hcnox, col_hcnox] = df.loc[mask_hcnox, col_hc] + df.loc[mask_hcnox, col_nox]
 
-        mask_hc = pd.isna(df[col_hc]) & pd.notna(df[col_nox]) & pd.notna(df[col_hcnox])
+        mask_hc = df[col_hc].isna() & df[col_nox].notna() & df[col_hcnox].notna()
         df.loc[mask_hc, col_hc] = df.loc[mask_hc, col_hcnox] - df.loc[mask_hc, col_nox]
 
-        mask_nox = pd.isna(df[col_nox]) & pd.notna(df[col_hc]) & pd.notna(df[col_hcnox])
+        mask_nox = df[col_nox].isna() & df[col_hc].notna() & df[col_hcnox].notna()
         df.loc[mask_nox, col_nox] = df.loc[mask_nox, col_hcnox] - df.loc[mask_nox, col_hc]
 
-# Apply iterative filling
-st.write("### Applying Iterative Missing Value Filling for hc, nox, hcnox")
-fill_missing_values(train_set, 'hc', 'nox', 'hcnox')
-fill_missing_values(test_set, 'hc', 'nox', 'hcnox')
+# Apply cleaning logic
+fill_missing_values(df, 'hc', 'nox', 'hcnox')
 
-# Debug Step: Check remaining missing values
-st.write("Remaining Missing Values (Train Set) after Iterative Filling:")
+# Final cleaning for safety
+df['hc'] = df['hc'].fillna(df['hc'].mean())
+df['nox'] = df['nox'].fillna(df['nox'].mean())
+df['hcnox'] = df['hcnox'].fillna(df['hcnox'].mean())
+
+st.write("### Missing Values After Cleaning (Pre-Split):")
+st.write(df[['hc', 'nox', 'hcnox']].isnull().sum())
+
+# Save the cleaned dataset locally for debugging
+df.to_csv("cleaned_dataset.csv", index=False)
+st.write("Cleaned dataset saved as `cleaned_dataset.csv` for verification.")
+
+# 2. Split Dataset Safely with Copies
+st.write("### Splitting Data")
+train_set, test_set = train_test_split(df.copy(), test_size=0.2, random_state=42)
+
+# Verify train and test set missing values
+st.write("### Missing Values in Train Set:")
 st.write(train_set[['hc', 'nox', 'hcnox']].isnull().sum())
 
-st.write("Remaining Missing Values (Test Set) after Iterative Filling:")
+st.write("### Missing Values in Test Set:")
 st.write(test_set[['hc', 'nox', 'hcnox']].isnull().sum())
 
-# Final Filling with Mean
-st.write("### Final Mean Imputation for Remaining Missing Values")
-train_set.fillna({
-    'hc': train_set['hc'].mean(),
-    'nox': train_set['nox'].mean(),
-    'hcnox': train_set['hcnox'].mean()
-}, inplace=True)
+# Final Safety Net: Refill Missing Values After Splitting
+mean_hc = train_set['hc'].mean()
+mean_nox = train_set['nox'].mean()
+mean_hcnox = train_set['hcnox'].mean()
 
-test_set.fillna({
-    'hc': train_set['hc'].mean(),  # Use training mean to avoid leakage
-    'nox': train_set['nox'].mean(),
-    'hcnox': train_set['hcnox'].mean()
-}, inplace=True)
+train_set['hc'].fillna(mean_hc, inplace=True)
+train_set['nox'].fillna(mean_nox, inplace=True)
+train_set['hcnox'].fillna(mean_hcnox, inplace=True)
 
-# Debug Step: Verify all missing values are resolved
-st.write("Final Missing Values in Train Set:")
+test_set['hc'].fillna(mean_hc, inplace=True)
+test_set['nox'].fillna(mean_nox, inplace=True)
+test_set['hcnox'].fillna(mean_hcnox, inplace=True)
+
+st.write("### Final Missing Values in Train Set:")
 st.write(train_set[['hc', 'nox', 'hcnox']].isnull().sum())
 
-st.write("Final Missing Values in Test Set:")
+st.write("### Final Missing Values in Test Set:")
 st.write(test_set[['hc', 'nox', 'hcnox']].isnull().sum())
+
+# Save the processed train and test sets for further analysis
+train_set.to_csv("final_train_set.csv", index=False)
+test_set.to_csv("final_test_set.csv", index=False)
+
+st.write("Train and Test sets saved as `final_train_set.csv` and `final_test_set.csv` for validation.")
+
 
 # Clean 'Particles' Column with Mean
 mean_particles_train = train_set['Particles'].mean()

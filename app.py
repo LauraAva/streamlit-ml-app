@@ -26,34 +26,34 @@ except FileNotFoundError:
     st.error("Dataset not found! Ensure the file is uploaded to the same directory as your app.")
     st.stop()  
 
-    # Data Information
-    st.write("Dataset Info:")
-    st.write(str(data.info()))
+# Data Information
+st.write("Dataset Info:")
+st.write(str(data.info()))
 
-    # Step 1: Preprocessing
-    st.header("Step 1: Preprocessing")
-    st.write("### Cleaning missing values")
-    data['hc'] = data['hc'].fillna(data['hc'].mean())
-    data['nox'] = data['nox'].fillna(data['nox'].mean())
-    data['hcnox'] = data['hcnox'].fillna(data['hcnox'].mean())
-    st.write("Missing values filled with mean for numeric columns.")
+# Step 1: Preprocessing
+st.header("Step 1: Preprocessing")
+st.write("### Cleaning missing values")
+data['hc'] = data['hc'].fillna(data['hc'].mean())
+data['nox'] = data['nox'].fillna(data['nox'].mean())
+data['hcnox'] = data['hcnox'].fillna(data['hcnox'].mean())
+st.write("Missing values filled with mean for numeric columns.")
 
-    # Display cleaned data
-    st.write("Cleaned Data Preview:")
-    st.write(data.head())
+# Display cleaned data
+st.write("Cleaned Data Preview:")
+st.write(data.head())
 
-    # Step 2: Splitting Data
-    st.header("Step 2: Splitting Data")
-    target_variable = st.selectbox("Select Target Variable", options=data.columns)
-    if target_variable:
-        st.write(f"Target variable: {target_variable}")
-        X = data.drop(columns=[target_variable])
-        y = data[target_variable]
+# Step 2: Splitting Data
+st.header("Step 2: Splitting Data")
+target_variable = st.selectbox("Select Target Variable", options=data.columns)
+if target_variable:
+    st.write(f"Target variable: {target_variable}")
+    X = data.drop(columns=[target_variable])
+    y = data[target_variable]
 
-        # Train-test split
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-        st.write(f"Training set size: {X_train.shape[0]} rows")
-        st.write(f"Test set size: {X_test.shape[0]} rows")
+    # Train-test split
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    st.write(f"Training set size: {X_train.shape[0]} rows")
+    st.write(f"Test set size: {X_test.shape[0]} rows")
 
     # Step 3: Feature Encoding
     st.header("Step 3: Feature Encoding")

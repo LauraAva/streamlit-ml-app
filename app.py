@@ -67,12 +67,6 @@ st.write(df[['hc', 'nox', 'hcnox']].isnull().sum())
 st.write("### Splitting Data")
 train_set, test_set = train_test_split(df.copy(), test_size=0.2, random_state=42)
 
-# Verify train and test set missing values
-st.write("### Missing Values in Train Set:")
-st.write(train_set[['hc', 'nox', 'hcnox']].isnull().sum())
-
-st.write("### Missing Values in Test Set:")
-st.write(test_set[['hc', 'nox', 'hcnox']].isnull().sum())
 
 # Final Safety Net: Refill Missing Values After Splitting
 mean_hc = train_set['hc'].mean()

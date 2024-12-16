@@ -9,26 +9,24 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.metrics import classification_report, accuracy_score, ConfusionMatrixDisplay
 from imblearn.over_sampling import SMOTE
 
-# Use relative path to the dataset
-dataset_path = "cl_union_cleaned_BI.csv"
-
-st.title("Machine Learning for CO2 Emissions Analysis")
-
-
 # Title and Introduction
 st.title("Machine Learning for CO2 Emissions Analysis")
 st.write(
-"This application provides a complete end-to-end machine learning workflow for analyzing CO2 emissions." 
-"You can preprocess data, train models, and explore insights in a seamless interface."
+    "This application provides a complete end-to-end machine learning workflow for analyzing CO2 emissions. "
+    "You can preprocess data, train models, and explore insights in a seamless interface."
 )
 
+# Load the dataset directly (from the local file)
+dataset_path = "cl_union_cleaned_BI.csv"  # File should be in the root directory of your repo
 try:
-    # Load the dataset directly from the local file path
     data = pd.read_csv(dataset_path)
-    st.write("Dataset Overview:")
+    st.write("### Dataset Overview:")
     st.write(data.head())
+
+    # Proceed with the rest of your workflow here...
 except FileNotFoundError:
-    st.error("Dataset not found. Please ensure 'cl_union_cleaned_BI.csv' is in the same directory as 'app.py'.")
+    st.error("Dataset not found! Ensure the file is uploaded to the same directory as your app.")
+
 
     # Data Information
     st.write("Dataset Info:")

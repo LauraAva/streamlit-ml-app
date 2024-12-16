@@ -66,11 +66,11 @@ st.write(df[['hc', 'nox', 'hcnox']].isnull().sum())
 
 # 2. Split Dataset 
 st.write("### Splitting Data")
-  # Train-test Split
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-        st.write("Training and Test Sets Prepared!")
-        st.write(f"Training Set Size: {X_train.shape[0]}")
-        st.write(f"Test Set Size: {X_test.shape[0]}")
+# Train-test Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+st.write("Training and Test Sets Prepared!")
+st.write(f"Training Set Size: {X_train.shape[0]}")
+st.write(f"Test Set Size: {X_test.shape[0]}")
         
 
 # Final Safety Net: Refill Missing Values After Splitting

@@ -96,14 +96,34 @@ st.dataframe(train_set.head())
 
 # Step 6: Model Training
 st.header("Step 6: Model Training")
+
+# Define Target and Features
 target_column = "CO2_class"
+if target_column not in train_set.columns:
+    st.error(f"Target column '{target_column}' not found in the dataset.")
+    st.stop()
+
+# Drop target column and ensure all remaining features are numeric
 X_train = train_set.drop(columns=[target_column])
 y_train = train_set[target_column]
 X_test = test_set.drop(columns=[target_column])
 y_test = test_set[target_column]
 
-model_choice = st.selectbox("Select a Model to Train", ["Logistic Regression", "Random Forest", "Decision Tree"])
+# Check for NaN and non-numeric columns
+if X_train.isnull().any().any() or X_test.isnull().any().any():
+    st.warning("NaN values detected in features. Filling NaN with column mean.")
+    X_train = X_train.fillna(X_train.mean())
+    X_test = X_test.fillna(X_test.mean())
 
+# Ensure all columns are numeric
+X_train = X_train.select_dtypes(include=[np.number])
+X_test = X_test.select_dtypes(include=[np.number])
+
+# Model Selection
+st.write("### Choose Model for Training")
+model_choice = st.selectbox("Select a Model", ["Logistic Regression", "Random Forest", "Decision Tree"])
+
+# Initialize Model
 if model_choice == "Logistic Regression":
     model = LogisticRegression(max_iter=1000)
 elif model_choice == "Random Forest":
@@ -111,13 +131,29 @@ elif model_choice == "Random Forest":
 else:
     model = DecisionTreeClassifier(max_depth=10, random_state=42)
 
-model.fit(X_train, y_train)
-y_pred = model.predict(X_test)
+try:
+    # Train the Model
+    model.fit(X_train, y_train)
 
-st.write("### Model Performance:")
-st.write(f"**Accuracy:** {accuracy_score(y_test, y_pred):.2f}")
-st.text("Classification Report:")
-st.text(classification_report(y_test, y_pred))
+    # Make Predictions
+    y_pred = model.predict(X_test)
+
+    # Model Performance Metrics
+    st.write("### Model Performance Metrics")
+    st.write(f"**Accuracy:** {accuracy_score(y_test, y_pred):.2f}")
+    st.text("Classification Report:")
+    st.text(classification_report(y_test, y_pred))
+
+    # Confusion Matrix
+    st.header("Step 7: Confusion Matrix")
+    fig, ax = plt.subplots()
+    ConfusionMatrixDisplay.from_estimator(model, X_test, y_test, cmap="Blues", ax=ax)
+    st.pyplot(fig)
+
+except Exception as e:
+    st.error(f"Error during model training or prediction: {e}")
+    st.stop()
+
 
 # Step 7: Visualization
 st.header("Step 7: Confusion Matrix")

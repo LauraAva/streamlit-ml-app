@@ -63,10 +63,6 @@ df['hcnox'] = df['hcnox'].fillna(df['hcnox'].mean())
 st.write("### Missing Values After Cleaning (Pre-Split):")
 st.write(df[['hc', 'nox', 'hcnox']].isnull().sum())
 
-# Save the cleaned dataset locally for debugging
-df.to_csv("cleaned_dataset.csv", index=False)
-st.write("Cleaned dataset saved as `cleaned_dataset.csv` for verification.")
-
 # 2. Split Dataset Safely with Copies
 st.write("### Splitting Data")
 train_set, test_set = train_test_split(df.copy(), test_size=0.2, random_state=42)
@@ -93,9 +89,6 @@ test_set['hcnox'].fillna(mean_hcnox, inplace=True)
 
 st.write("### Final Missing Values in Train Set:")
 st.write(train_set[['hc', 'nox', 'hcnox']].isnull().sum())
-
-st.write("### Final Missing Values in Test Set:")
-st.write(test_set[['hc', 'nox', 'hcnox']].isnull().sum())
 
 # Save the processed train and test sets for further analysis
 train_set.to_csv("final_train_set.csv", index=False)

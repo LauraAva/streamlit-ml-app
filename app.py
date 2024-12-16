@@ -85,8 +85,50 @@ test_set['hcnox'].fillna(mean_hcnox, inplace=True)
 # Save the processed train and test sets for further analysis
 train_set.to_csv("final_train_set.csv", index=False)
 test_set.to_csv("final_test_set.csv", index=False)
+# Define the function to fill missing values for consumption columns
+def fill_consumption_values(df, urban_col, extra_urban_col, mix_col):
+    for _ in range(5):  # Iterate to handle dependencies
+        # Fill Consumption_mix if Urban and Extra-Urban are available
+        mask_mix = df[mix_col].isna() & df[urban_col].notna() & df[extra_urban_col].notna()
+        df.loc[mask_mix, mix_col] = (df.loc[mask_mix, urban_col] + df.loc[mask_mix, extra_urban_col]) / 2
 
-st.write("Train and Test sets saved as `final_train_set.csv` and `final_test_set.csv` for validation.")
+        # Fill Urban_consumption if Extra-Urban and Mix are available
+        mask_urban = df[urban_col].isna() & df[extra_urban_col].notna() & df[mix_col].notna()
+        df.loc[mask_urban, urban_col] = 2 * df.loc[mask_urban, mix_col] - df.loc[mask_urban, extra_urban_col]
+
+        # Fill Extra-Urban consumption if Urban and Mix are available
+        mask_extra_urban = df[extra_urban_col].isna() & df[urban_col].notna() & df[mix_col].notna()
+        df.loc[mask_extra_urban, extra_urban_col] = 2 * df.loc[mask_extra_urban, mix_col] - df.loc[mask_extra_urban, urban_col]
+
+# Apply the function to train and test sets
+fill_consumption_values(train_set, 'Urban_consumption (l/100km)', 'Extra_urban_consumption(l/100km)', 'Consumption_mix(l/100km)')
+fill_consumption_values(test_set, 'Urban_consumption (l/100km)', 'Extra_urban_consumption(l/100km)', 'Consumption_mix(l/100km)')
+
+# Fill remaining missing values in train set with column means
+train_set['Urban_consumption (l/100km)'] = train_set['Urban_consumption (l/100km)'].fillna(train_set['Urban_consumption (l/100km)'].mean())
+train_set['Extra_urban_consumption(l/100km)'] = train_set['Extra_urban_consumption(l/100km)'].fillna(train_set['Extra_urban_consumption(l/100km)'].mean())
+train_set['Consumption_mix(l/100km)'] = train_set['Consumption_mix(l/100km)'].fillna(train_set['Consumption_mix(l/100km)'].mean())
+train_set['CO_type_I (g/km)'] = train_set['CO_type_I (g/km)'].fillna(train_set['CO_type_I (g/km)'].mean())
+
+# Fill remaining missing values in test set with column means
+test_set['Urban_consumption (l/100km)'] = test_set['Urban_consumption (l/100km)'].fillna(train_set['Urban_consumption (l/100km)'].mean())  # Use train mean to avoid leakage
+test_set['Extra_urban_consumption(l/100km)'] = test_set['Extra_urban_consumption(l/100km)'].fillna(train_set['Extra_urban_consumption(l/100km)'].mean())  # Use train mean
+test_set['Consumption_mix(l/100km)'] = test_set['Consumption_mix(l/100km)'].fillna(train_set['Consumption_mix(l/100km)'].mean())  # Use train mean
+test_set['CO_type_I (g/km)'] = test_set['CO_type_I (g/km)'].fillna(train_set['CO_type_I (g/km)'].mean())  # Use train mean
+
+# Verify missing values in train and test sets
+st.write("### Final Missing Values in Train Set (Consumption Columns):")
+st.write(train_set[['Urban_consumption (l/100km)', 'Extra_urban_consumption(l/100km)', 
+                    'Consumption_mix(l/100km)', 'CO_type_I (g/km)']].isnull().sum())
+
+st.write("### Final Missing Values in Test Set (Consumption Columns):")
+st.write(test_set[['Urban_consumption (l/100km)', 'Extra_urban_consumption(l/100km)', 
+                   'Consumption_mix(l/100km)', 'CO_type_I (g/km)']].isnull().sum())
+
+# Save final train and test sets for debugging
+train_set.to_csv("final_train_set_consumption.csv", index=False)
+test_set.to_csv("final_test_set_consumption.csv", index=False)
+st.write("Train and Test sets saved as `final_train_set_consumption.csv` and `final_test_set_consumption.csv` for debugging.")
 
 
 # Clean 'Particles' Column with Mean

@@ -205,6 +205,36 @@ test_set[numerical_columns] = scaler.transform(test_set[numerical_columns])
 st.write("### Final Train Dataset Preview:")
 st.dataframe(train_set.head())
 
+#Step 6: Check
+st.header("Step 6: Check")
+
+# Ensure all columns in features are numeric
+st.write("### Ensuring Numeric Columns in Features:")
+X_train = X_train.select_dtypes(include=[np.number])
+X_test = X_test.select_dtypes(include=[np.number])
+
+# Check for NaN values after ensuring numeric data
+st.write("### Checking for NaN Values in Features Before Filling:")
+st.write(f"NaN in X_train: {X_train.isnull().sum().sum()}")
+st.write(f"NaN in X_test: {X_test.isnull().sum().sum()}")
+
+# Fill NaN values with column mean
+if X_train.isnull().any().any() or X_test.isnull().any().any():
+    st.warning("NaN values detected in features. Filling with column mean.")
+    X_train = X_train.fillna(X_train.mean())
+    X_test = X_test.fillna(X_test.mean())
+
+# Debug Step: Display the updated feature sets
+st.write("### Updated X_train:")
+st.dataframe(X_train.head())
+
+st.write("### Updated X_test:")
+st.dataframe(X_test.head())
+
+# Proceed with model training
+st.write("### Proceeding with Model Training...")
+
+
 # Step 7: Model Training
 st.header("Step 7: Model Training")
 target_column = "CO2_class"

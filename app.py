@@ -119,6 +119,56 @@ st.write("### Train Set After Scaling:")
 st.dataframe(X_train.head())
 
 # Step 6: Model Training
+# Check for NaN or invalid data in features
+st.write("### Checking Features and Target for Issues")
+st.write(f"NaN in X_train: {X_train.isnull().sum().sum()}")
+st.write(f"NaN in y_train: {pd.isnull(y_train).sum()}")
+
+# Ensure features are numeric
+X_train = X_train.select_dtypes(include=[np.number])
+X_test = X_test.select_dtypes(include=[np.number])
+
+# Ensure target does not have NaN
+if y_train.isnull().any():
+    st.error("Target variable `y_train` contains NaN values. Please clean it.")
+    st.stop()
+
+# Ensure target is numeric
+if not np.issubdtype(y_train.dtype, np.number):
+    st.error("Target variable `y_train` must be numeric.")
+    st.stop()
+st.write(f"Shape of X_train: {X_train.shape}")
+st.write(f"Shape of y_train: {y_train.shape}")
+
+if X_train.shape[0] != y_train.shape[0]:
+    st.error("Mismatch between number of samples in `X_train` and `y_train`.")
+    st.stop()
+# Fill NaN in features
+X_train = X_train.fillna(X_train.mean())
+X_test = X_test.fillna(X_test.mean())
+
+# Double-check for any remaining NaNs
+if X_train.isnull().any().any():
+    st.error("NaN values still present in `X_train` after filling.")
+    st.stop()
+
+if X_test.isnull().any().any():
+    st.error("NaN values still present in `X_test` after filling.")
+    st.stop()
+# Ensure target values are valid
+st.write("Unique values in y_train:", y_train.unique())
+
+if y_train.isnull().any():
+    st.error("`y_train` contains NaN values. Please clean it.")
+    st.stop()
+# Fit the model
+try:
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    st.write("### Model Training Completed Successfully!")
+except Exception as e:
+    st.error(f"Error during model training: {e}")
+
 st.header("Step 6: Model Training")
 
 # Model Selection

@@ -136,6 +136,17 @@ mean_particles_train = train_set['Particles'].mean()
 train_set['Particles'].fillna(mean_particles_train, inplace=True)
 test_set['Particles'].fillna(mean_particles_train, inplace=True)
 
+###Check 
+
+st.write("### Columns in Train Set:")
+st.write(train_set.columns.tolist())
+st.write("### Columns in Test Set:")
+st.write(test_set.columns.tolist())
+
+available_categorical_columns = [col for col in categorical_columns if col in train_set.columns]
+if not available_categorical_columns:
+    st.error("No valid categorical columns found for encoding.")
+    st.stop()
 
 # Step 4: Encoding Categorical Variables
 st.header("Step 4: Encoding Categorical Variables")

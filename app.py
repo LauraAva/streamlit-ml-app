@@ -50,6 +50,15 @@ train_set, test_set = train_test_split(df, test_size=0.2, random_state=42)
 st.write(f"Train Set Size: {train_set.shape[0]} rows")
 st.write(f"Test Set Size: {test_set.shape[0]} rows")
 
+# Debug: Verify split integrity
+st.write("### Checking for NaN values in Train/Test Split:")
+st.write("Train Set Missing Values:")
+st.write(train_set.isnull().sum())
+
+st.write("Test Set Missing Values:")
+st.write(test_set.isnull().sum())
+
+
 # Step 4: Encoding Categorical Variables
 st.header("Step 4: Encoding Categorical Variables")
 
@@ -93,6 +102,22 @@ test_set[numerical_columns] = scaler.transform(test_set[numerical_columns])
 
 st.write("### Final Train Dataset Preview:")
 st.dataframe(train_set.head())
+
+# Step 6: Verify Data Integrity Before Model Training
+st.header("Step 6: Verify Data Integrity Before Model Training")
+
+# Check for NaN in train and test datasets
+st.write("Checking for NaN values in Train Set:")
+st.write(X_train.isnull().sum())
+
+st.write("Checking for NaN values in Test Set:")
+st.write(X_test.isnull().sum())
+
+# Fill NaN values if found
+X_train = X_train.fillna(X_train.mean())
+X_test = X_test.fillna(X_test.mean())
+st.write("NaN values filled with column means.")
+
 
 # Step 6: Model Training
 st.header("Step 6: Model Training")

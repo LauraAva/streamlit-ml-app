@@ -171,20 +171,20 @@ test_set[categorical_columns] = test_set[categorical_columns].astype(str)
 # Feature Encoding
 st.subheader("Feature Encoding:")
 categorical_cols = st.multiselect("Select Categorical Columns to Encode:", options=X.columns)
-    if categorical_cols:
-        encoder = OneHotEncoder()
-        X_train_encoded = encoder.fit_transform(X_train[categorical_cols]).toarray()
-        X_test_encoded = encoder.transform(X_test[categorical_cols]).toarray()
-        st.write("Feature Encoding Completed!")
+if categorical_cols:
+    encoder = OneHotEncoder()
+    X_train_encoded = encoder.fit_transform(X_train[categorical_cols]).toarray()
+    X_test_encoded = encoder.transform(X_test[categorical_cols]).toarray()
+    st.write("Feature Encoding Completed!")
         
 # Standardize Numerical Columns
 st.subheader("Feature Scaling:")
 numerical_cols = st.multiselect("Select Numerical Columns to Standardize:", options=X.columns)
-    if numerical_cols:
-        scaler = StandardScaler()
-        X_train[numerical_cols] = scaler.fit_transform(X_train[numerical_cols])
-        X_test[numerical_cols] = scaler.transform(X_test[numerical_cols])
-        st.write("Feature Scaling Completed!")
+if numerical_cols:
+    scaler = StandardScaler()
+    X_train[numerical_cols] = scaler.fit_transform(X_train[numerical_cols])
+    X_test[numerical_cols] = scaler.transform(X_test[numerical_cols])
+    st.write("Feature Scaling Completed!")
 
 st.header("Step 4: Encoding Categorical Variables")
 

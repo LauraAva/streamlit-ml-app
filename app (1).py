@@ -9,8 +9,11 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.metrics import classification_report, accuracy_score, ConfusionMatrixDisplay
 from imblearn.over_sampling import SMOTE
 
-# Path to the dataset within the folder
+# Use relative path to the dataset
 dataset_path = "cl_union_cleaned_BI.csv"
+
+st.title("Machine Learning for CO2 Emissions Analysis")
+
 
 # Title and Introduction
 st.title("Machine Learning for CO2 Emissions Analysis")
@@ -24,7 +27,8 @@ try:
     data = pd.read_csv(dataset_path)
     st.write("Dataset Overview:")
     st.write(data.head())
-
+except FileNotFoundError:
+    st.error("Dataset not found. Please ensure 'cl_union_cleaned_BI.csv' is in the same directory as 'app.py'.")
 
     # Data Information
     st.write("Dataset Info:")

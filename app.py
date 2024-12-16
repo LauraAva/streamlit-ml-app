@@ -22,9 +22,10 @@ Upload or load a dataset to execute a complete end-to-end workflow:
 
 # Step 1: Load Dataset from GitHub
 st.header("Step 1: Load Dataset from GitHub")
-url = "https://github.com/LauraAva/streamlit-ml-app/blob/main/cl_union_cleaned_BI.csv"  # Replace with your URL
+url = "https://raw.githubusercontent.com/LauraAva/streamlit-ml-app/refs/heads/main/cl_union_cleaned_BI.csv"  # Replace with your URL
 try:
-    df = pd.read_csv(url)
+    # Load CSV file with proper delimiter handling
+    df = pd.read_csv(url, sep=',', on_bad_lines='skip', engine='python')
     st.success("Dataset loaded successfully from GitHub!")
     st.write("### Raw Dataset Preview:")
     st.dataframe(df.head())

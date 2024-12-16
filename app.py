@@ -103,20 +103,71 @@ test_set[numerical_columns] = scaler.transform(test_set[numerical_columns])
 st.write("### Final Train Dataset Preview:")
 st.dataframe(train_set.head())
 
-# Step 6: Verify Data Integrity Before Model Training
-st.header("Step 6: Verify Data Integrity Before Model Training")
+# Step 5: Encoding Categorical Variables
+st.header("Step 4: Encoding Categorical Variables")
+categorical_columns = ['Carrosserie', 'fuel_type', 'Gearbox']
 
-# Check for NaN in train and test datasets
-st.write("Checking for NaN values in Train Set:")
-st.write(X_train.isnull().sum())
+# Debug Step: Check for NaNs before encoding
+st.write("### Checking for Missing Values Before Encoding:")
+st.write(train_set[categorical_columns].isnull().sum())
 
-st.write("Checking for NaN values in Test Set:")
-st.write(X_test.isnull().sum())
+encoder = OneHotEncoder(sparse=False, handle_unknown="ignore")
+encoded_train = pd.DataFrame(encoder.fit_transform(train_set[categorical_columns]))
+encoded_test = pd.DataFrame(encoder.transform(test_set[categorical_columns]))
 
-# Fill NaN values if found
+# Concatenate Encoded Columns
+train_set = pd.concat([train_set.reset_index(drop=True), encoded_train], axis=1).drop(columns=categorical_columns)
+test_set = pd.concat([test_set.reset_index(drop=True), encoded_test], axis=1).drop(columns=categorical_columns)
+
+# Debug Step: Check for alignment after encoding
+train_set, test_set = train_set.align(test_set, join="left", axis=1, fill_value=0)
+st.write("### Train Set and Test Set Shapes After Encoding:")
+st.write(f"Train Set Shape: {train_set.shape}")
+st.write(f"Test Set Shape: {test_set.shape}")
+
+
+
+# Step 7: Model Training
+st.header("Step 6: Model Training")
+target_column = "CO2_class"
+
+# Splitting features and target
+X_train = train_set.drop(columns=[target_column])
+y_train = train_set[target_column]
+X_test = test_set.drop(columns=[target_column])
+y_test = test_set[target_column]
+
+# Debug Step: Check for NaNs in X_train and X_test
+st.write("### Checking for NaN in Features Before Model Training:")
+st.write(f"NaN in X_train: {X_train.isnull().sum().sum()}")
+st.write(f"NaN in X_test: {X_test.isnull().sum().sum()}")
+
+# Fill NaN if necessary
 X_train = X_train.fillna(X_train.mean())
 X_test = X_test.fillna(X_test.mean())
-st.write("NaN values filled with column means.")
+
+# Model Selection
+model_choice = st.selectbox("Select a Model to Train", ["Logistic Regression", "Random Forest", "Decision Tree"])
+
+if model_choice == "Logistic Regression":
+    model = LogisticRegression(max_iter=1000)
+elif model_choice == "Random Forest":
+    model = RandomForestClassifier(n_estimators=100, random_state=42)
+else:
+    model = DecisionTreeClassifier(max_depth=10, random_state=42)
+
+# Model Training
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+
+# Debug Step: Model Training Completed
+st.write("### Model Training Completed Successfully!")
+
+# Evaluation
+st.write("### Model Performance:")
+st.write(f"**Accuracy:** {accuracy_score(y_test, y_pred):.2f}")
+st.text("Classification Report:")
+st.text(classification_report(y_test, y_pred))
 
 
 # Step 6: Model Training

@@ -150,7 +150,6 @@ st.write("### Test Set Preview:")
 st.dataframe(test_set.head())
 
 # Step 4: Encoding Categorical Variables
-# Step 4: Encoding Categorical Variables
 st.header("Step 4: Encoding Categorical Variables")
 
 # Debugging: Display column names
@@ -206,13 +205,9 @@ test_set[numerical_columns] = scaler.transform(test_set[numerical_columns])
 st.write("### Final Train Dataset Preview:")
 st.dataframe(train_set.head())
 
-# Step 5: Encoding Categorical Variables
-st.header("Step 4: Encoding Categorical Variables")
+# Step 6: Encoding Categorical Variables
+st.header("Step 6: Encoding Categorical Variables")
 categorical_columns = ['Carrosserie', 'fuel_type', 'Gearbox']
-
-# Debug Step: Check for NaNs before encoding
-st.write("### Checking for Missing Values Before Encoding:")
-st.write(train_set[categorical_columns].isnull().sum())
 
 encoder = OneHotEncoder(sparse=False, handle_unknown="ignore")
 encoded_train = pd.DataFrame(encoder.fit_transform(train_set[categorical_columns]))
@@ -231,7 +226,7 @@ st.write(f"Test Set Shape: {test_set.shape}")
 
 
 # Step 7: Model Training
-st.header("Step 6: Model Training")
+st.header("Step 7: Model Training")
 target_column = "CO2_class"
 
 # Splitting features and target
@@ -273,8 +268,8 @@ st.text("Classification Report:")
 st.text(classification_report(y_test, y_pred))
 
 
-# Step 6: Model Training
-st.header("Step 6: Model Training")
+# Step 8: Model Training
+st.header("Step 8: Model Training")
 
 # Define Target and Features
 target_column = "CO2_class"
@@ -334,8 +329,8 @@ except Exception as e:
     st.stop()
 
 
-# Step 7: Visualization
-st.header("Step 7: Confusion Matrix")
+# Step 9: Visualization
+st.header("Step 9: Confusion Matrix")
 ConfusionMatrixDisplay.from_estimator(model, X_test, y_test, cmap="Blues")
 st.pyplot(plt.gcf())
 

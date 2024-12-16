@@ -119,47 +119,51 @@ st.write("### Train Set After Scaling:")
 st.dataframe(X_train.head())
 
 # Step 6: Model Training
-# Fill NaN values in X_train with column means
-X_train = X_train.fillna(X_train.mean())
+# Drop non-numeric columns
+numeric_X_train = X_train.select_dtypes(include=[np.number])
 
-# Check again for any remaining NaNs
-st.write(f"Remaining NaN in X_train after filling: {X_train.isnull().sum().sum()}")
-if X_train.isnull().any().any():
-    st.error("NaN values still present in `X_train` after filling. Please debug.")
-    st.stop()
-# Display unique values in y_train
-st.write("Unique values in y_train:", y_train.unique())
-# Convert y_train to numeric if needed
+# Check for non-numeric columns
+non_numeric_columns = X_train.select_dtypes(exclude=[np.number]).columns.tolist()
+st.write(f"Non-numeric columns in X_train: {non_numeric_columns}")
+
+# Fill NaN values in numeric columns
+X_train[numeric_X_train.columns] = numeric_X_train.fillna(numeric_X_train.mean())
+
+# Check for remaining NaN values
+st.write(f"Remaining NaN in X_train: {X_train.isnull().sum().sum()}")
+
+# Convert y_train to numeric
 if not np.issubdtype(y_train.dtype, np.number):
     try:
-        y_train = y_train.astype(float)  # Attempt direct conversion
+        y_train = y_train.astype(float)
     except ValueError:
-        # Map categorical labels to numeric
         label_mapping = {label: idx for idx, label in enumerate(y_train.unique())}
         y_train = y_train.map(label_mapping)
         st.write("Mapped y_train labels to numeric:", label_mapping)
-if y_train.isnull().any():
-    st.error("`y_train` contains NaN values after conversion. Please debug.")
-    st.stop()
-# Verify shapes and data types
+# Verify consistency
 st.write(f"Shape of X_train: {X_train.shape}")
 st.write(f"Shape of y_train: {y_train.shape}")
 
 if X_train.shape[0] != y_train.shape[0]:
-    st.error("Mismatch between number of samples in `X_train` and `y_train`.")
+    st.error("Mismatch between number of samples in X_train and y_train.")
     st.stop()
-
-if not np.issubdtype(y_train.dtype, np.number):
-    st.error("`y_train` must be numeric.")
-    st.stop()
-
-# Retry model training
+# Model Training
 try:
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
-    st.write("### Model Training Completed Successfully!")
+    st.write("Model training completed successfully!")
 except Exception as e:
     st.error(f"Error during model training: {e}")
+# Save processed datasets
+X_train.to_csv("processed_train_set.csv", index=False)
+X_test.to_csv("processed_test_set.csv", index=False)
+
+# Add download buttons
+with open("processed_train_set.csv", "rb") as file:
+    st.download_button("Download Processed Train Set", file, "processed_train_set.csv")
+
+with open("processed_test_set.csv", "rb") as file:
+    st.download_button("Download Processed Test Set", file, "processed_test_set.csv")
 
 
 st.header("Step 6: Model Training")

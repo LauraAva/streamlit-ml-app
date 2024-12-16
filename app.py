@@ -205,26 +205,6 @@ test_set[numerical_columns] = scaler.transform(test_set[numerical_columns])
 st.write("### Final Train Dataset Preview:")
 st.dataframe(train_set.head())
 
-# Step 6: Encoding Categorical Variables
-st.header("Step 6: Encoding Categorical Variables")
-categorical_columns = ['Carrosserie', 'fuel_type', 'Gearbox']
-
-encoder = OneHotEncoder(sparse=False, handle_unknown="ignore")
-encoded_train = pd.DataFrame(encoder.fit_transform(train_set[categorical_columns]))
-encoded_test = pd.DataFrame(encoder.transform(test_set[categorical_columns]))
-
-# Concatenate Encoded Columns
-train_set = pd.concat([train_set.reset_index(drop=True), encoded_train], axis=1).drop(columns=categorical_columns)
-test_set = pd.concat([test_set.reset_index(drop=True), encoded_test], axis=1).drop(columns=categorical_columns)
-
-# Debug Step: Check for alignment after encoding
-train_set, test_set = train_set.align(test_set, join="left", axis=1, fill_value=0)
-st.write("### Train Set and Test Set Shapes After Encoding:")
-st.write(f"Train Set Shape: {train_set.shape}")
-st.write(f"Test Set Shape: {test_set.shape}")
-
-
-
 # Step 7: Model Training
 st.header("Step 7: Model Training")
 target_column = "CO2_class"

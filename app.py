@@ -179,9 +179,6 @@ X_test[numerical_columns] = scaler.transform(X_test[numerical_columns])
 st.write("### Final Train Set After Scaling:")
 st.dataframe(X_train.head())
 
-st.write("### Encoded Features Preview:")
-st.dataframe(X_train_encoded.iloc[:, :10].head())
-
 
 st.header("Step 6: Model Training")
 # Model Selection
@@ -199,15 +196,9 @@ elif model_choice == "Random Forest":
 else:
     model = DecisionTreeClassifier(max_depth=10, random_state=42)
 
-if model_choice == "Random Forest":
-    feature_importances = pd.Series(model.feature_importances_, index=X_train.columns)
-    st.bar_chart(feature_importances.sort_values(ascending=False).head(10))
-
 # Train the model
 model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
-
-
 
 # Evaluate the model
 st.write(f"Model Accuracy: {accuracy_score(y_test, y_pred):.2f}")
@@ -219,19 +210,6 @@ fig, ax = plt.subplots()
 ConfusionMatrixDisplay.from_estimator(model, X_test, y_test, cmap="Blues", ax=ax)
 st.pyplot(fig)
 
-if st.checkbox("Perform Hyperparameter Tuning"):
-    param_grid = {'n_estimators': [50, 100, 200], 'max_depth': [None, 10, 20]}
-    grid_search = GridSearchCV(RandomForestClassifier(random_state=42), param_grid, cv=3)
-    grid_search.fit(X_train, y_train)
-    st.write("Best Parameters:", grid_search.best_params_)
-    model = grid_search.best_estimator_
-    
-if st.checkbox("Perform Feature Selection"):
-    corr_matrix = X_train.corr()
-    st.write("Correlation Matrix:")
-    st.dataframe(corr_matrix)
-    top_features = corr_matrix['target_column'].abs().sort_values(ascending=False).head(10).index.tolist()
-    st.write("Top Features Based on Correlation:", top_features)
 
 # Step 7: Model Evaluation
 st.header("Step 7: Model Evaluation")
@@ -246,8 +224,6 @@ st.write("### Confusion Matrix")
 fig, ax = plt.subplots()
 ConfusionMatrixDisplay.from_estimator(model, X_test, y_test, cmap="Blues", ax=ax)
 st.pyplot(fig)
-st.write("### Target Class Distribution in Training Set:")
-st.bar_chart(y_train.value_counts())
 
 # Step 8: Download Processed Data
 st.header("Step 8: Download Processed Data")

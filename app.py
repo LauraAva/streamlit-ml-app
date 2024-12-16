@@ -36,26 +36,54 @@ except Exception as e:
 # Step 2: Data Cleaning
 st.header("Step 2: Data Cleaning")
 st.write("### Filling Missing Values")
-df['hcnox'] = df['hc'] + df['nox']
-df['hc'] = df['hc'].fillna(df['hcnox'] - df['nox'])
-df['nox'] = df['nox'].fillna(df['hcnox'] - df['hc'])
-df['Particles'] = df['Particles'].fillna(df['Particles'].mean())
+# Function to iteratively fill missing values in hc, nox, hcnox
+def fill_missing_values(df, col_hc, col_nox, col_hcnox):
+    for _ in range(5):  # Apply iteratively for robust filling
+        # Fill 'hcnox' where 'hc' and 'nox' are known
+        mask_hcnox = pd.isna(df[col_hcnox]) & pd.notna(df[col_hc]) & pd.notna(df[col_nox])
+        df.loc[mask_hcnox, col_hcnox] = df.loc[mask_hcnox, col_hc] + df.loc[mask_hcnox, col_nox]
+
+        # Fill 'hc' where 'hcnox' and 'nox' are known
+        mask_hc = pd.isna(df[col_hc]) & pd.notna(df[col_nox]) & pd.notna(df[col_hcnox])
+        df.loc[mask_hc, col_hc] = df.loc[mask_hc, col_hcnox] - df.loc[mask_hc, col_nox]
+
+        # Fill 'nox' where 'hcnox' and 'hc' are known
+        mask_nox = pd.isna(df[col_nox]) & pd.notna(df[col_hc]) & pd.notna(df[col_hcnox])
+        df.loc[mask_nox, col_nox] = df.loc[mask_nox, col_hcnox] - df.loc[mask_nox, col_hc]
 
 st.write("### Cleaned Dataset Preview:")
 st.dataframe(df.head())
 
 # Step 3: Splitting Data
 st.header("Step 3: Splitting Data")
+# Train-Test Split
 train_set, test_set = train_test_split(df, test_size=0.2, random_state=42)
-st.write(f"Train Set Size: {train_set.shape[0]} rows")
-st.write(f"Test Set Size: {test_set.shape[0]} rows")
+train_set = train_set.reset_index(drop=True)
+test_set = test_set.reset_index(drop=True)
 
-# Debug: Verify split integrity
-st.write("### Checking for NaN values in Train/Test Split:")
-st.write("Train Set Missing Values:")
+# Apply Missing Value Function
+fill_missing_values(train_set, 'hc', 'nox', 'hcnox')
+fill_missing_values(test_set, 'hc', 'nox', 'hcnox')
+
+# Final Filling with Mean for Remaining Missing Values
+train_set.fillna({'hc': train_set['hc'].mean(), 'nox': train_set['nox'].mean(), 'hcnox': train_set['hcnox'].mean()}, inplace=True)
+test_set.fillna({'hc': test_set['hc'].mean(), 'nox': test_set['nox'].mean(), 'hcnox': test_set['hcnox'].mean()}, inplace=True)
+
+# Clean 'Particles' Column with Mean
+mean_particles_train = train_set['Particles'].mean()
+train_set['Particles'].fillna(mean_particles_train, inplace=True)
+test_set['Particles'].fillna(mean_particles_train, inplace=True)
+
+# Verify Missing Values
+st.write("### Missing Values in Train Set After Cleaning:")
 st.write(train_set.isnull().sum())
 
-st.write("Test Set Missing Values:")
+st.write("### Missing Values in Test Set After Cleaning:")
+st.write(test_set.isnull().sum())
+st.write("Final Missing Values in Train Set:")
+st.write(train_set.isnull().sum())
+
+st.write("Final Missing Values in Test Set:")
 st.write(test_set.isnull().sum())
 
 

@@ -33,6 +33,26 @@ except Exception as e:
     st.error(f"Error loading the dataset: {e}")
     st.stop()
     
+st.header("X_TRAIN NOT DEFINED")
+if target_column not in train_set.columns:
+    st.error(f"Target column '{target_column}' not found in the dataset.")
+    st.stop()
+
+# Ensure numeric features only
+X_train = train_set.drop(columns=[target_column]).select_dtypes(include=[np.number])
+y_train = train_set[target_column]
+X_test = test_set.drop(columns=[target_column]).select_dtypes(include=[np.number])
+y_test = test_set[target_column]
+
+# Handle missing values
+X_train = X_train.fillna(X_train.mean())
+X_test = X_test.fillna(X_test.mean())
+
+st.write("### Features and Target Split Completed!")
+st.write(f"X_train shape: {X_train.shape}")
+st.write(f"X_test shape: {X_test.shape}")
+
+
 #Step 2 &3
 st.header("Step 2: Data Cleaning and Integrity Check")
 
@@ -73,14 +93,14 @@ mean_hc = train_set['hc'].mean()
 mean_nox = train_set['nox'].mean()
 mean_hcnox = train_set['hcnox'].mean()
 
-train_set['hc'].fillna(mean_hc, inplace=True)
-train_set['nox'].fillna(mean_nox, inplace=True)
-train_set['hcnox'].fillna(mean_hcnox, inplace=True)
+train_set['hc'] = train_set['hc'].fillna(mean_hc)
+train_set['nox'] = train_set['nox'].fillna(mean_nox)
+train_set['hcnox'] = train_set['hcnox'].fillna(mean_hcnox)
 
-test_set['hc'].fillna(mean_hc, inplace=True)
-test_set['nox'].fillna(mean_nox, inplace=True)
-test_set['hcnox'].fillna(mean_hcnox, inplace=True)
-
+test_set['hc'] = test_set['hc'].fillna(mean_hc)
+test_set['nox'] = test_set['nox'].fillna(mean_nox)
+test_set['hcnox'] = test_set['hcnox'].fillna(mean_hcnox)
+ 
 
 # Save the processed train and test sets for further analysis
 train_set.to_csv("final_train_set.csv", index=False)

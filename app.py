@@ -77,18 +77,18 @@ if categorical_columns:
 
 if numeric_columns:
     
-# Step 4: Standardize numeric columns
-scaler = StandardScaler()
-X_train_num = scaler.fit_transform(X_train[numeric_columns])
-X_test_num = scaler.transform(X_test[numeric_columns])
+    # Step 4: Standardize numeric columns
+    scaler = StandardScaler()
+    X_train_num = scaler.fit_transform(X_train[numeric_columns])
+    X_test_num = scaler.transform(X_test[numeric_columns])
 
-# Convert back to DataFrame
-X_train_num_df = pd.DataFrame(X_train_num, columns=numeric_columns)
-X_test_num_df = pd.DataFrame(X_test_num, columns=numeric_columns)
+    # Convert back to DataFrame
+    X_train_num_df = pd.DataFrame(X_train_num, columns=numeric_columns)
+    X_test_num_df = pd.DataFrame(X_test_num, columns=numeric_columns)
 
-# Drop original numeric columns and merge standardized ones
-X_train = pd.concat([X_train.drop(columns=numeric_columns).reset_index(drop=True), X_train_num_df], axis=1)
-X_test = pd.concat([X_test.drop(columns=numeric_columns).reset_index(drop=True), X_test_num_df], axis=1)
+    # Drop original numeric columns and merge standardized ones
+    X_train = pd.concat([X_train.drop(columns=numeric_columns).reset_index(drop=True), X_train_num_df], axis=1)
+    X_test = pd.concat([X_test.drop(columns=numeric_columns).reset_index(drop=True), X_test_num_df], axis=1)
 
 st.write("Feature encoding and standardization completed successfully!")
 st.write(f"Final Training Data Shape: {X_train.shape}")

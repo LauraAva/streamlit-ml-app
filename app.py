@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -23,10 +22,9 @@ try:
     st.write("### Dataset Overview:")
     st.write(data.head())
 
-    # Proceed with the rest of your workflow here...
 except FileNotFoundError:
     st.error("Dataset not found! Ensure the file is uploaded to the same directory as your app.")
-
+     st.stop()
 
     # Data Information
     st.write("Dataset Info:")
@@ -120,6 +118,4 @@ except FileNotFoundError:
     plt.ylabel('Frequency')
     plt.title('CO2 Emissions Distribution')
     st.pyplot(plt.gcf())
-else:
-    st.write("Please upload a dataset to proceed.")
-    
+

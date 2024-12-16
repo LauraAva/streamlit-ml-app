@@ -15,8 +15,8 @@ st.write(
     "You can preprocess data, train models, and explore insights in a seamless interface."
 )
 
-# Load the dataset directly (from the local file)
-dataset_path = "cl_union_cleaned_BI.csv"  # File should be in the root directory of your repo
+# Load the dataset directly
+dataset_path = "cl_union_cleaned_BI.csv"  # File in the root directory
 try:
     data = pd.read_csv(dataset_path)
     st.write("### Dataset Overview:")
@@ -24,7 +24,7 @@ try:
 
 except FileNotFoundError:
     st.error("Dataset not found! Ensure the file is uploaded to the same directory as your app.")
-     st.stop()
+    st.stop()  
 
     # Data Information
     st.write("Dataset Info:")

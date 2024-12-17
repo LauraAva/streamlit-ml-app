@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split, GridSearchCV, StratifiedShuffleSplit
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
@@ -36,6 +36,7 @@ except Exception as e:
 # Step 2: Data Cleaning
 st.header("Step 2: Data Cleaning")
 
+# Fill Missing Values for Emissions
 def fill_missing_values(df, col_hc, col_nox, col_hcnox):
     for _ in range(5):  # Iterate to handle dependencies
         mask_hcnox = df[col_hcnox].isna() & df[col_hc].notna() & df[col_nox].notna()
@@ -68,18 +69,15 @@ if target_column not in df.columns:
 X = df.drop(columns=[target_column])
 y = df[target_column]
 
-# Display Class Distribution
-st.write("### Class Distribution in Target Variable (y):")
-st.write("Training Set Distribution:")
-st.bar_chart(y.value_counts())
-
 # Train-Test Split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 st.write(f"Training Set Size: {X_train.shape[0]}")
 st.write(f"Test Set Size: {X_test.shape[0]}")
 
 # Step 4: Encoding Categorical Variables
 st.header("Step 4: Encoding Categorical Variables")
+
+# Define Categorical Columns
 categorical_columns = ['Carrosserie', 'fuel_type', 'Gearbox']
 missing_columns = [col for col in categorical_columns if col not in X_train.columns]
 if missing_columns:
@@ -92,7 +90,7 @@ for col in categorical_columns:
     X_test[col] = X_test[col].fillna('Unknown')
 
 # Encode Categorical Variables
-encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)  # Updated argument
 X_train_encoded = encoder.fit_transform(X_train[categorical_columns])
 X_test_encoded = encoder.transform(X_test[categorical_columns])
 
@@ -104,27 +102,23 @@ X_test_encoded = pd.DataFrame(X_test_encoded, columns=encoder.get_feature_names_
 X_train = pd.concat([X_train.drop(columns=categorical_columns), X_train_encoded], axis=1)
 X_test = pd.concat([X_test.drop(columns=categorical_columns), X_test_encoded], axis=1)
 
-# Preview Encoded Features
-st.write("### Preview of Encoded Features:")
-st.dataframe(X_train_encoded.head())
+
+st.write("### Train Set After Encoding:")
+st.dataframe(X_train.head())
 
 # Step 5: Scaling Numerical Features
 st.header("Step 5: Scaling Numerical Features")
+
+# Scale Numerical Features
 numerical_columns = ['Consumption_mix(l/100km)', 'CO2', 'power_maximal (kW)', 'Empty_mass_min(kg)']
 scaler = StandardScaler()
 X_train[numerical_columns] = scaler.fit_transform(X_train[numerical_columns])
 X_test[numerical_columns] = scaler.transform(X_test[numerical_columns])
 
-# Feature Selection Based on Correlation
-if st.checkbox("Perform Feature Selection"):
-    corr_matrix = X_train.corr()
-    st.write("Correlation Matrix:")
-    st.dataframe(corr_matrix)
-    top_features = corr_matrix[target_column].abs().sort_values(ascending=False).head(10).index.tolist()
-    st.write("Top Features Based on Correlation:", top_features)
+st.write("### Train Set After Scaling:")
+st.dataframe(X_train.head())
 
-# Step 6: Model Training and Hyperparameter Tuning
-st.header("Step 6: Model Training")
+# Step 6: Model Training
 # Drop non-numeric columns from X_train and X_test
 non_numeric_columns = ['Model_UTAC', 'Commercial_name', 
                        'Code_National_Identification_Type', 'Type_Variante_Version(TVV)', 
@@ -186,7 +180,7 @@ st.write("### Final Train Set After Scaling:")
 st.dataframe(X_train.head())
 
 
-st.header("Step 7: Model Training")
+st.header("Step 6: Model Training")
 # Model Selection
 # Map target labels
 label_mapping = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5, "G": 6}
@@ -216,90 +210,25 @@ fig, ax = plt.subplots()
 ConfusionMatrixDisplay.from_estimator(model, X_test, y_test, cmap="Blues", ax=ax)
 st.pyplot(fig)
 
-if model_choice == "Random Forest":
-    st.write("### Feature Importance")
-    feature_importances = model.feature_importances_
-    sorted_indices = np.argsort(feature_importances)[::-1]
-    plt.figure(figsize=(10, 6))
-    plt.bar(range(X_train.shape[1]), feature_importances[sorted_indices])
-    plt.xticks(range(X_train.shape[1]), X_train.columns[sorted_indices], rotation=90)
-    plt.title("Feature Importance for Random Forest")
-    st.pyplot(plt.gcf())
-    
-st.write("### Class Distribution in Training and Test Sets")
-st.write("y_train distribution:")
-st.bar_chart(y_train.value_counts())
-st.write("y_test distribution:")
-st.bar_chart(y_test.value_counts())
 
-st.write("### Encoded Features Preview")
-st.write("Top Encoded Features in Train Set:")
-st.write(X_train.columns[:10])
+# Step 7: Model Evaluation
+st.header("Step 7: Model Evaluation")
 
+# Display Metrics
+st.write(f"**Accuracy:** {accuracy_score(y_test, y_pred):.2f}")
+st.text("Classification Report:")
+st.text(classification_report(y_test, y_pred))
 
-st.write("### Encoded Features Preview")
-st.write("Top Encoded Features in Train Set:")
-st.write(X_train.columns[:10])
-
-if st.checkbox("Enable Hyperparameter Tuning"):
-    st.write("### Hyperparameter Tuning")
-    if model_choice == "Random Forest":
-        param_grid = {
-            'n_estimators': [50, 100, 200],
-            'max_depth': [None, 10, 20, 30]
-        }
-        grid_search = GridSearchCV(model, param_grid, cv=3, scoring='accuracy')
-        grid_search.fit(X_train, y_train)
-        st.write(f"Best Parameters: {grid_search.best_params_}")
-        st.write(f"Best Accuracy: {grid_search.best_score_:.2f}")
-        model = grid_search.best_estimator_
-
-        # Re-train and evaluate the best model
-        model.fit(X_train, y_train)
-        y_pred = model.predict(X_test)
-        st.write(f"Model Accuracy After Tuning: {accuracy_score(y_test, y_pred):.2f}")
-
-if st.checkbox("Enable Hyperparameter Tuning"):
-    st.write("### Hyperparameter Tuning")
-    if model_choice == "Random Forest":
-        param_grid = {
-            'n_estimators': [50, 100, 200],
-            'max_depth': [None, 10, 20, 30]
-        }
-        grid_search = GridSearchCV(model, param_grid, cv=3, scoring='accuracy')
-        grid_search.fit(X_train, y_train)
-        st.write(f"Best Parameters: {grid_search.best_params_}")
-        st.write(f"Best Accuracy: {grid_search.best_score_:.2f}")
-        model = grid_search.best_estimator_
-
-        # Re-train with the tuned model
-        model.fit(X_train, y_train)
-        y_pred = model.predict(X_test)
-        st.write(f"Model Accuracy After Tuning: {accuracy_score(y_test, y_pred):.2f}")
-
-# Apply feature selection if checkbox is enabled
-if st.checkbox("Select Top Features After Tuning"):
-    st.write("### Selecting Top Features After Tuning")
-    correlation = X_train.corrwith(y_train)
-    top_features = correlation.abs().sort_values(ascending=False).head(10).index
-    st.write(f"Top Features Based on Correlation: {list(top_features)}")
-
-    # Reduce feature set
-    X_train = X_train[top_features]
-    X_test = X_test[top_features]
-
-    # Re-train the model with the reduced feature set
-    model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
-
-    # Evaluate the model again
-    st.write(f"Model Accuracy After Feature Selection: {accuracy_score(y_test, y_pred):.2f}")
-    st.text("Classification Report After Feature Selection:")
-    st.text(classification_report(y_test, y_pred))
-
+# Confusion Matrix
+st.write("### Confusion Matrix")
+fig, ax = plt.subplots()
+ConfusionMatrixDisplay.from_estimator(model, X_test, y_test, cmap="Blues", ax=ax)
+st.pyplot(fig)
 
 # Step 8: Download Processed Data
 st.header("Step 8: Download Processed Data")
+
+# Save Processed Data
 X_train.to_csv("processed_train_set.csv", index=False)
 X_test.to_csv("processed_test_set.csv", index=False)
 

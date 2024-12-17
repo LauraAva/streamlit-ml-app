@@ -232,9 +232,9 @@ st.bar_chart(y_train.value_counts())
 st.write("y_test distribution:")
 st.bar_chart(y_test.value_counts())
 
-# Check for imbalance
-if y_train.value_counts().max() / y_train.value_counts().min() > 1.5:
-    st.warning("Class imbalance detected in y_train. Consider oversampling or undersampling.")
+st.write("### Encoded Features Preview")
+st.write("Top Encoded Features in Train Set:")
+st.write(X_train.columns[:10])
 
 
 st.write("### Encoded Features Preview")

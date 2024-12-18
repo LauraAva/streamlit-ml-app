@@ -5,8 +5,13 @@ import pandas as pd
 # Set up the sidebar
 setup_sidebar()
 
+# Page Title
 st.title("📄 Data Loading")
 st.write("Upload your dataset here or use the preloaded dataset.")
+
+# Initialize session state for 'data' if it doesn't exist
+if 'data' not in st.session_state:
+    st.session_state['data'] = None
 
 # File upload widget
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
@@ -15,26 +20,17 @@ if uploaded_file is not None:
     st.session_state['data'] = df
     st.success("Dataset loaded successfully!")
 else:
-    st.warning("Please upload a dataset.")
-
-# Ensure session state is initialized
-if 'data' not in st.session_state:
-    st.session_state['data'] = None  # Initialize session state data
-
-# File upload widget
-uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
-if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file)
-    st.session_state['data'] = df  # Save dataset to session state
-    st.success("Dataset loaded successfully!")
-else:
-    # Default Dataset
-    if 'data' not in st.session_state:   
+    # Use preloaded dataset if no file is uploaded
+    if st.session_state['data'] is None:
         st.write("Using preloaded dataset:")
         df = pd.read_csv("cl_union_cleaned_BI_combined_file.csv")
         st.session_state['data'] = df  # Save default dataset to session state
     else:
         df = st.session_state['data']
+
+# Ensure session state is initialized
+if 'data' not in st.session_state:
+    st.session_state['data'] = None  # Initialize session state data
 
 
 # Display Dataset Preview
@@ -57,25 +53,34 @@ if st.session_state['data'] is not None:
 
 ''')
     
-# Fix Year column: remove commas and convert to integer
-if 'Year' in df.columns:
+ Fix Year column: remove commas and convert to integer
+if 'Year' in st.session_state['data'].columns:
+    df = st.session_state['data']
     df['Year'] = df['Year'].replace({',': ''}, regex=True)  # Remove commas
     df['Year'] = pd.to_numeric(df['Year'], errors='coerce').astype('Int64')  # Convert to integer
     st.session_state['data'] = df
 
 # Display Dataset Summary
-    # Exclude 'Year' column from summary
-    if 'Year' in st.session_state['data'].columns:
-        summary_df = st.session_state['data'].drop(columns=['Year']).describe()
-    else:
-        summary_df = st.session_state['data'].describe()
+st.write("### Dataset Summary:")
+if 'Year' in st.session_state['data'].columns:
+    summary_df = st.session_state['data'].drop(columns=['Year']).describe()
+else:
+    summary_df = st.session_state['data'].describe()
+st.write(summary_df)
 
-    st.write("### Dataset Summary:")
-    st.write(summary_df)
+# Missing Value Statistics
+st.write("### Missing Value Statistics:")
+missing_values = st.session_state['data'].isnull().sum().reset_index()
+missing_values.columns = ['Column', 'Missing Values']
+st.dataframe(missing_values)
 
-    # Display missing value statistics
-    st.write("### Missing Value Statistics:")
-    missing_values = st.session_state['data'].isnull().sum().reset_index()
-    missing_values.columns = ['Column', 'Missing Values']
-    st.dataframe(missing_values)
+# Display Dataset Details
+st.write("### Dataset Information:")
+st.markdown("""
+The dataset includes:
+- **CO2 emissions** (grams per kilometre)
+- **Fuel consumption** (litres per 100 kilometres)
+- **Engine specifications**: power output, curb weight, and energy type.
+- **Pollutants**: NOx, HC, and particulate matter levels.
+""")
 

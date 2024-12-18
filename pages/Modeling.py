@@ -12,25 +12,32 @@ st.title("Model Training and Evaluation")
 df = st.session_state.get('data', None)
 if df is not None:
     # Preprocess data
-    st.write("### Preprocessing Steps")
-    target_column = "CO2_class"
-    if target_column not in df.columns:
-        st.error("Target column 'CO2_class' not found!")
-        st.stop()
+st.write("### Preprocessing Steps")
+target_column = "CO2_class"
+if target_column not in df.columns:
+    st.error("Target column 'CO2_class' not found!")
+    st.stop()
 
-    X = df.drop(columns=[target_column])
-    y = df[target_column]
+X = df.drop(columns=[target_column])
+y = df[target_column]
 
-    # Encode categorical features
-    categorical_cols = ['brand', 'Model_file', 'range', 'Group', 'Country']
-    encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
-    X_encoded = encoder.fit_transform(X[categorical_cols])
-    X = pd.concat([X.drop(columns=categorical_cols), pd.DataFrame(X_encoded)], axis=1)
+# Encode categorical features
+categorical_cols = ['brand', 'Model_file', 'range', 'Group', 'Country']
+encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
 
-    # Scale numerical features
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-    X = pd.DataFrame(X_scaled, columns=X.columns)
+# Perform encoding and get feature names
+encoded_array = encoder.fit_transform(X[categorical_cols])
+encoded_df = pd.DataFrame(encoded_array, columns=encoder.get_feature_names_out(categorical_cols))
+
+# Drop original categorical columns and concatenate encoded features
+X = X.drop(columns=categorical_cols)
+X = pd.concat([X.reset_index(drop=True), encoded_df.reset_index(drop=True)], axis=1)
+
+# Scale numerical features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+X = pd.DataFrame(X_scaled, columns=X.columns)
+
 
     # Train-test split
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)

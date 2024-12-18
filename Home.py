@@ -3,33 +3,37 @@ import streamlit as st
 # Custom Sidebar Styling
 st.markdown("""
     <style>
-        /* Sidebar background */
+        /* Sidebar Background */
         [data-testid="stSidebar"] {
             background-color: #2b4c7e !important;
-            color: white !important;
         }
 
-        /* Sidebar title and text */
-        [data-testid="stSidebar"] .stTitle,
-        [data-testid="stSidebar"] .stText {
+        /* Sidebar Text Styling */
+        [data-testid="stSidebar"] * {
             color: #f5f7fa !important;
         }
 
-        /* Remove default Streamlit padding */
+        /* Sidebar Title Styling */
+        [data-testid="stSidebar"] h1 {
+            color: #ffffff !important;
+            font-size: 20px !important;
+            font-weight: bold !important;
+            margin-top: 20px !important;
+        }
+
+        /* Remove Streamlit padding */
         .block-container {
             padding-top: 0;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# Sidebar Navigation
-st.sidebar.image("logo.png", use_container_width=True)  # Place logo at the top
+# Sidebar Logo
+st.sidebar.image("logo.png", use_container_width=True)
+
+# Title for the Sidebar
 st.sidebar.title("🔍 CO₂ Emission Analysis")
 st.sidebar.markdown("---")  # Separator line
-
-# Navigation Links
-pages = ["🏠 Home", "📄 Data Loading", "📊 Exploration", "🧪 Modeling", "🔮 Predictions"]
-selected_page = st.sidebar.radio("Go to", pages)
 
 # Header Content
 st.title("CO₂ Emission Analysis & Prediction Pipeline")

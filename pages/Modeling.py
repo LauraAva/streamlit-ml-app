@@ -63,18 +63,21 @@ model_choice = st.selectbox("Choose a model:", ["Random Forest", "Logistic Regre
     
 # Initialize the model
 if model_choice == "Random Forest":
-    model = RandomForestClassifier()
+    st.write("Training Random Forest...")
+    model = RandomForestClassifier(n_estimators=50, max_depth=10, random_state=42)
     if st.checkbox("Enable Hyperparameter Tuning"):
         param_grid = {"n_estimators": [50, 100, 200], "max_depth": [10, 20, None]}
-        grid_search = GridSearchCV(model, param_grid, cv=3)
+        grid_search = GridSearchCV(model, param_grid, cv=3, , scoring="accuracy")
         grid_search.fit(X_train, y_train)
         model = grid_search.best_estimator_
         st.write(f"Best Parameters: {grid_search.best_params_}")
+        
     elif model_choice == "Decision Tree":
+        st.write(§Training Decision Tree...")
         model = DecisionTreeClassifier(random_state=42)
         if st.checkbox("Enable Hyperparameter Tuning"):
             param_grid = {"max_depth": [5, 10, 20, None], "min_samples_split": [2, 5, 10]}
-            grid_search = GridSearchCV(model, param_grid, cv=3)
+            grid_search = GridSearchCV(model, param_grid, cv=3, scoring="accuracy")
             grid_search.fit(X_train, y_train)
             model = grid_search.best_estimator_
             st.write(f"Best Parameters: {grid_search.best_params_}")
@@ -87,9 +90,11 @@ if model_choice == "Random Forest":
 
     # Display metrics
     st.write(f"Accuracy: {accuracy_score(y_test, y_pred):.2f}")
+    st.text("Classification Report:")
     st.text(classification_report(y_test, y_pred))
 
     # Confusion matrix
+    st.write("### Confusion Matrix")
     fig, ax = plt.subplots()
     ConfusionMatrixDisplay.from_estimator(model, X_test, y_test, cmap="Blues", ax=ax)
     st.pyplot(fig)

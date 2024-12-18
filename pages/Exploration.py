@@ -2,8 +2,23 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from utils import setup_sidebar
 
-st.title("Data Exploration and Visualizations")
+# Set up the sidebar
+setup_sidebar()
+
+st.title("📄 Data Exploration & Vizualisations")
+st.write("Upload your dataset here or use the preloaded dataset.")
+
+# File upload widget
+uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
+    st.session_state['data'] = df
+    st.success("Dataset loaded successfully!")
+else:
+    st.warning("Please upload a dataset.")
+
 
 # Retrieve dataset
 df = st.session_state.get('data', None)

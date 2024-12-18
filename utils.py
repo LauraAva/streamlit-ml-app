@@ -38,18 +38,4 @@ def setup_sidebar():
     st.sidebar.title("🔍 CO₂ Emission Analysis")
     st.sidebar.markdown("---")
 
-    # Sidebar Navigation
-    pages = ["🏠 Home", "📄 Data Loading", "📊 Exploration", "🧪 Modeling", "🔮 Predictions"]
-    page_selection = st.sidebar.radio("Go to", pages)
-
-    # Update navigation query
-    if page_selection == "🏠 Home":
-        st.query_params.update({"page": "Home"})
-    elif page_selection == "📄 Data Loading":
-        st.query_params.update({"page": "Data_Loading"})
-    elif page_selection == "📊 Exploration":
-        st.query_params.update({"page": "Exploration"})
-    elif page_selection == "🧪 Modeling":
-        st.query_params.update({"page": "Modeling"})
-    else:
-        st.query_params.update({"page": "Predictions"})
+   

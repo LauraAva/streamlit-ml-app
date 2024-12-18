@@ -100,13 +100,28 @@ elif model_choice == "Decision Tree":
         model = grid_search.best_estimator_
         st.write(f"Best Parameters: {grid_search.best_params_}")
 
-else:  # Logistic Regression
+elif model_choice == "Logistic Regression":
     st.write("Training Logistic Regression...")
-    model = LogisticRegression(max_iter=1000)
 
-# Train the model
-model.fit(X_train, y_train)
-y_pred = model.predict(X_test)
+    # Add a solver and reduce the maximum iterations for faster convergence
+    model = LogisticRegression(
+        solver="saga",  # Use 'saga' for large datasets
+        max_iter=500,   # Reduce iterations to save time
+        verbose=1       # Monitor progress
+    )
+
+    # Optional: Use PCA to reduce dimensions
+    if st.checkbox("Enable PCA for Dimensionality Reduction"):
+        from sklearn.decomposition import PCA
+        n_components = st.slider("Select number of PCA components:", 5, min(X_train.shape[1], 50), 10)
+        pca = PCA(n_components=n_components)
+        X_train = pca.fit_transform(X_train)
+        X_test = pca.transform(X_test)
+        st.write(f"Reduced dataset to {n_components} dimensions.")
+
+    # Train the model
+    model.fit(X_train, y_train)
+
 
 # Step 11: Evaluate the model
 st.write(f"**Accuracy:** {accuracy_score(y_test, y_pred):.2f}")

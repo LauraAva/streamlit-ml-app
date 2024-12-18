@@ -1,6 +1,6 @@
 import streamlit as st
 
-# Custom Sidebar Styling
+# Custom Styling to Fix Header Cut-Off and Sidebar
 st.markdown("""
     <style>
         /* Sidebar Background */
@@ -21,9 +21,21 @@ st.markdown("""
             margin-top: 20px !important;
         }
 
-        /* Remove Streamlit padding */
+        /* Main Title and Content Spacing */
         .block-container {
-            padding-top: 0;
+            padding-top: 2rem !important;
+        }
+        
+        /* Adjust Header Position */
+        h1, h2, h3 {
+            margin-top: 0 !important;
+            padding-top: 0.5rem !important;
+        }
+
+        /* Optional: Logo Alignment */
+        [data-testid="stSidebar"] img {
+            display: block;
+            margin: 0 auto 20px;
         }
     </style>
 """, unsafe_allow_html=True)

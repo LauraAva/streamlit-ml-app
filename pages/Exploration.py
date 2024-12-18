@@ -13,16 +13,27 @@ if df is not None:
     if target_column in df.columns:
         st.bar_chart(df[target_column].value_counts())
 
-    # Plot missing values
-    st.write("### Missing Value Statistics")
-    st.write(df.isnull().sum())
-
     # Allow user to select columns to visualize
     st.write("### Column Distribution")
     column_to_plot = st.selectbox("Select a column to plot:", df.columns)
-    plt.figure(figsize=(8, 6))
-    df[column_to_plot].value_counts().plot(kind="bar")
-    plt.title(f"Distribution of {column_to_plot}")
-    st.pyplot(plt.gcf())
+
+    if column_to_plot in df.columns:
+        plt.figure(figsize=(8, 6))
+
+        # For numeric columns, use histogram
+        if pd.api.types.is_numeric_dtype(df[column_to_plot]):
+            plt.hist(df[column_to_plot].dropna(), bins=50, color='skyblue', edgecolor='black')
+            plt.title(f"Distribution of {column_to_plot}")
+            plt.xlabel(column_to_plot)
+            plt.ylabel("Frequency")
+        # For categorical columns, use bar plot
+        elif df[column_to_plot].nunique() <= 50:  # Avoid plotting high-cardinality columns
+            df[column_to_plot].value_counts().plot(kind="bar", color='skyblue')
+            plt.title(f"Distribution of {column_to_plot}")
+            plt.ylabel("Count")
+        else:
+            st.warning(f"'{column_to_plot}' has too many unique values to visualize as a barplot.")
+
+        st.pyplot(plt.gcf())
 else:
     st.warning("Please load a dataset first in the 'Dataset Loading' section.")

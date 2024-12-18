@@ -8,6 +8,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 from utils import setup_sidebar
+from sklearn.exceptions import ConvergenceWarning
+import warnings
 
 # Set up the sidebar
 setup_sidebar()
@@ -103,24 +105,37 @@ elif model_choice == "Decision Tree":
 elif model_choice == "Logistic Regression":
     st.write("Training Logistic Regression...")
 
-    # Add a solver and reduce the maximum iterations for faster convergence
-    model = LogisticRegression(
-        solver="saga",  # Use 'saga' for large datasets
-        max_iter=500,   # Reduce iterations to save time
-        verbose=1       # Monitor progress
-    )
+    try:
+        # Add solver and reduce max_iter
+        model = LogisticRegression(
+            solver="saga",  # Optimized for sparse data
+            max_iter=500,   # Reasonable max iterations
+            verbose=1       # Show progress
+        )
 
-    # Optional: Use PCA to reduce dimensions
-    if st.checkbox("Enable PCA for Dimensionality Reduction"):
-        from sklearn.decomposition import PCA
-        n_components = st.slider("Select number of PCA components:", 5, min(X_train.shape[1], 50), 10)
-        pca = PCA(n_components=n_components)
-        X_train = pca.fit_transform(X_train)
-        X_test = pca.transform(X_test)
-        st.write(f"Reduced dataset to {n_components} dimensions.")
+        # Optional: PCA to reduce dimensions
+        if st.checkbox("Enable PCA for Dimensionality Reduction"):
+            from sklearn.decomposition import PCA
+            n_components = st.slider("Select number of PCA components:", 
+                                     5, min(X_train.shape[1], 50), 10)
+            pca = PCA(n_components=n_components)
+            X_train = pca.fit_transform(X_train)
+            X_test = pca.transform(X_test)
+            st.write(f"Dataset reduced to {n_components} components.")
 
-    # Train the model
-    model.fit(X_train, y_train)
+        # Train the model with warnings suppressed for Convergence issues
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=ConvergenceWarning)
+            model.fit(X_train, y_train)
+
+        # Predict and evaluate
+        y_pred = model.predict(X_test)
+        st.write(f"**Accuracy:** {accuracy_score(y_test, y_pred):.2f}")
+        st.text("Classification Report:")
+        st.text(classification_report(y_test, y_pred))
+
+    except Exception as e:
+        st.error(f"An error occurred during training: {e}")
 
 
 # Step 11: Evaluate the model

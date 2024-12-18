@@ -108,12 +108,24 @@ st.pyplot(fig)
 # Feature importance for Random Forest and Decision Tree
 if model_choice in ["Random Forest", "Decision Tree"]:
     st.write("### Feature Importance")
+
+    # Retrieve and sort feature importances
     feature_importances = model.feature_importances_
-    sorted_indices = feature_importances.argsort()[::-1]
+    sorted_indices = feature_importances.argsort()[::-1]  # Sort in descending order
+
+    # Show only top 10 features
+    top_n = st.slider("Select top N features to display:", min_value=5, max_value=20, value=10)
+    top_features = sorted_indices[:top_n]
+
+    # Plot top N features
     plt.figure(figsize=(10, 6))
-    plt.bar(range(len(feature_importances)), feature_importances[sorted_indices])
-    plt.xticks(range(len(feature_importances)), X.columns[sorted_indices], rotation=90)
-    plt.title("Feature Importance")
+    plt.bar(range(top_n), feature_importances[top_features], align="center")
+    plt.xticks(range(top_n), X.columns[top_features], rotation=45, ha="right")
+    plt.title(f"Top {top_n} Feature Importance")
+    plt.xlabel("Features")
+    plt.ylabel("Importance")
+    plt.tight_layout()
+
     st.pyplot(plt.gcf())
 
 # Step 12: Save the model to session state

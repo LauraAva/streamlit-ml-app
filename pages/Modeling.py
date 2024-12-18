@@ -73,7 +73,7 @@ if model_choice == "Random Forest":
         st.write(f"Best Parameters: {grid_search.best_params_}")
         
     elif model_choice == "Decision Tree":
-        st.write(§Training Decision Tree...")
+        st.write("Training Decision Tree...")
         model = DecisionTreeClassifier(random_state=42)
         if st.checkbox("Enable Hyperparameter Tuning"):
             param_grid = {"max_depth": [5, 10, 20, None], "min_samples_split": [2, 5, 10]}

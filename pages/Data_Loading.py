@@ -3,20 +3,26 @@ import pandas as pd
 
 st.set_page_config(page_title="Data Loading", page_icon="📄")
 
-st.title("Load Dataset")
+st.title("Dataset Loading and Exploration")
 
-st.write("Upload a dataset to begin your analysis. If none is uploaded, the default dataset will be used.")
-
-# File uploader
-uploaded_file = st.file_uploader("Upload CSV", type="csv")
-
-if uploaded_file:
+# File upload widget
+uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
+if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
-    st.success("Dataset uploaded successfully!")
+    st.session_state['data'] = df
+    st.success("Dataset loaded successfully!")
 else:
-    url = "https://raw.githubusercontent.com/LauraAva/streamlit-ml-app/refs/heads/main/cl_union_cleaned_BI.csv"
-    df = pd.read_csv(url)
-    st.info("Using the default dataset.")
+    # Default Dataset
+    st.write("Using preloaded dataset:")
+    df = pd.read_csv("cl_union_cleaned_BI.csv")
+    st.session_state['data'] = df
 
-st.write("Preview of the Dataset:")
+# Display dataset summary
+st.write("### Dataset Preview:")
 st.dataframe(df.head())
+
+st.write("### Dataset Summary:")
+st.write(df.describe())
+
+st.write("### Missing Value Statistics:")
+st.write(df.isnull().sum())

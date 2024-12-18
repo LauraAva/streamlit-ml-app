@@ -49,17 +49,27 @@ st.success("Preprocessing completed successfully!")
 # Train-test split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Model selection
-st.write("### Model Training")
-model_choice = st.selectbox("Choose a model:", ["Random Forest", "Logistic Regression"])
-if model_choice == "Random Forest":
-    model = RandomForestClassifier()
-    if st.checkbox("Enable Hyperparameter Tuning"):
-        param_grid = {"n_estimators": [50, 100, 200], "max_depth": [10, 20, None]}
-        grid_search = GridSearchCV(model, param_grid, cv=3)
-        grid_search.fit(X_train, y_train)
-        model = grid_search.best_estimator_
-        st.write(f"Best Parameters: {grid_search.best_params_}")
+ # Model selection
+    st.write("### Model Training")
+    model_choice = st.selectbox("Choose a model:", ["Random Forest", "Logistic Regression", "Decision Tree"])
+    
+    # Initialize the model
+    if model_choice == "Random Forest":
+        model = RandomForestClassifier()
+        if st.checkbox("Enable Hyperparameter Tuning"):
+            param_grid = {"n_estimators": [50, 100, 200], "max_depth": [10, 20, None]}
+            grid_search = GridSearchCV(model, param_grid, cv=3)
+            grid_search.fit(X_train, y_train)
+            model = grid_search.best_estimator_
+            st.write(f"Best Parameters: {grid_search.best_params_}")
+    elif model_choice == "Decision Tree":
+        model = DecisionTreeClassifier(random_state=42)
+        if st.checkbox("Enable Hyperparameter Tuning"):
+            param_grid = {"max_depth": [5, 10, 20, None], "min_samples_split": [2, 5, 10]}
+            grid_search = GridSearchCV(model, param_grid, cv=3)
+            grid_search.fit(X_train, y_train)
+            model = grid_search.best_estimator_
+            st.write(f"Best Parameters: {grid_search.best_params_}")
     else:
         model = LogisticRegression(max_iter=1000)
 
@@ -76,12 +86,14 @@ if model_choice == "Random Forest":
     ConfusionMatrixDisplay.from_estimator(model, X_test, y_test, cmap="Blues", ax=ax)
     st.pyplot(fig)
 
-    # Feature importance for Random Forest
-    if model_choice == "Random Forest":
+    # Feature importance for Random Forest and Decision Tree
+    if model_choice in ["Random Forest", "Decision Tree"]:
         st.write("### Feature Importance")
         feature_importances = model.feature_importances_
+        sorted_indices = feature_importances.argsort()[::-1]
         plt.figure(figsize=(10, 6))
-        plt.bar(range(len(feature_importances)), feature_importances)
+        plt.bar(range(len(feature_importances)), feature_importances[sorted_indices])
+        plt.xticks(range(len(feature_importances)), X.columns[sorted_indices], rotation=90)
         plt.title("Feature Importance")
         st.pyplot(plt.gcf())
 

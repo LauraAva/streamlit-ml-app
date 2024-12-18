@@ -59,7 +59,7 @@ elif page_selection == "📊 Exploration":
     st.query_params.update({"page": "Exploration"})
 elif page_selection == "🧪 Modeling":
     st.query_params.update({"page": "Modeling"})
-else 
+else: 
     st.query_params.update({"page": "Predictions"})
 
 

@@ -1,4 +1,5 @@
 import streamlit as st
+
 # Global CSS Styling
 st.markdown("""
     <style>
@@ -6,22 +7,42 @@ st.markdown("""
     .main {
         background-color: #f5f7fa;
     }
+
     /* Sidebar styling */
     [data-testid="stSidebar"] {
         background-color: #2b4c7e;
         color: white;
+        padding-top: 20px;
     }
     [data-testid="stSidebar"] h1, 
     [data-testid="stSidebar"] h2, 
     [data-testid="stSidebar"] h3 {
-        color: #f5f7fa;
+        display: none;  /* Hide default headers */
     }
+    [data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] {
+        display: none;  /* Hide the redundant markdown container */
+    }
+    /* Sidebar text and links */
+    .stRadio label {
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    /* Sidebar logo */
+    .stImage img {
+        margin-top: -20px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+    }
+
     /* Title styling */
     .stTitle {
         color: #2b4c7e;
         font-weight: bold;
         text-align: center;
     }
+
     /* Buttons */
     .stButton>button {
         background-color: #2b4c7e;
@@ -31,33 +52,39 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Custom Sidebar for Navigation
-st.sidebar.image("logo.png", use_container_width=True)  # Updated to use_container_width
+# Sidebar Content with Icons and Navigation
+st.sidebar.image("logo.png", use_container_width=True)
 st.sidebar.title("🔍 CO₂ Emission Analysis")
 st.sidebar.markdown("---")  # Separator line
 
 # Sidebar navigation options
 st.sidebar.write("### Navigation")
-pages = ["🏠 Home", "📄 Data Loading", "📊 Exploration", "🧪 Modeling", "🔮 Predictions"]
+pages = [
+    "🏠 Home", 
+    "📄 Data Loading", 
+    "📊 Exploration", 
+    "🧪 Modeling", 
+    "🔮 Predictions"
+]
 page_selection = st.sidebar.radio("Go to", pages)
 
-# Navigate between pages using query parameters
+# Page Navigation
 if page_selection == "🏠 Home":
-    st.query_params.update({"page": "Home"})  # Updated to st.query_params
+    st.query_params["page"] = "Home"
 elif page_selection == "📄 Data Loading":
-    st.query_params.update({"page": "Data_Loading"})
+    st.query_params["page"] = "Data_Loading"
 elif page_selection == "📊 Exploration":
-    st.query_params.update({"page": "Exploration"})
+    st.query_params["page"] = "Exploration"
 elif page_selection == "🧪 Modeling":
-    st.query_params.update({"page": "Modeling"})
+    st.query_params["page"] = "Modeling"
 else:
-    st.query_params.update({"page": "Predictions"})
+    st.query_params["page"] = "Predictions"
 
 # Main Content
-st.title("CO2 Emission Analysis & Prediction Pipeline")
+st.title("CO₂ Emission Analysis & Prediction Pipeline")
 st.write("""
 ## Project Overview
-Welcome to the CO2 Emission Analysis and Prediction App! 🚗  
+Welcome to the CO₂ Emission Analysis and Prediction App! 🚗  
 This app enables you to:
 1. **Explore and clean datasets** 📊  
 2. **Build machine learning models** 🤖  
@@ -71,7 +98,7 @@ This app enables you to:
 
 ## Dataset:
 - Preloaded Dataset: `cl_union_cleaned_BI_combined_file.csv`
-- Target Variable: CO2 Emission Classes (A to G)
+- Target Variable: CO₂ Emission Classes (A to G)
 
 Navigate through the sections using the sidebar! 👈  
 """)

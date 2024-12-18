@@ -1,7 +1,21 @@
 import streamlit as st
+from utils import setup_sidebar
 import pandas as pd
 
-st.title("Dataset Loading and Exploration")
+# Set up the sidebar
+setup_sidebar()
+
+st.title("📄 Data Loading")
+st.write("Upload your dataset here or use the preloaded dataset.")
+
+# File upload widget
+uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
+    st.session_state['data'] = df
+    st.success("Dataset loaded successfully!")
+else:
+    st.warning("Please upload a dataset.")
 
 # Ensure session state is initialized
 if 'data' not in st.session_state:

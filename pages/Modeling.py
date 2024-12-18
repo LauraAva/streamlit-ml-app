@@ -21,24 +21,29 @@ if df is not None:
     X = df.drop(columns=[target_column])
     y = df[target_column]
 
-    # Encode categorical features
-    categorical_cols = ['brand', 'Model_file', 'range', 'Group', 'Country']
-    encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+   # Encode categorical features
+categorical_cols = ['brand', 'Model_file', 'range', 'Group', 'Country']
+encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
 
-    # Perform encoding and get feature names
-    encoded_array = encoder.fit_transform(X[categorical_cols])
-    encoded_df = pd.DataFrame(encoded_array, columns=encoder.get_feature_names_out(categorical_cols))
+# Perform encoding and get feature names
+encoded_array = encoder.fit_transform(X[categorical_cols])
+encoded_df = pd.DataFrame(encoded_array, columns=encoder.get_feature_names_out(categorical_cols))
 
-    # Drop original categorical columns and concatenate encoded features
-    X = X.drop(columns=categorical_cols)
-    X = pd.concat([X.reset_index(drop=True), encoded_df.reset_index(drop=True)], axis=1)
+# Drop original categorical columns and concatenate encoded features
+X = X.drop(columns=categorical_cols)
+X = pd.concat([X.reset_index(drop=True), encoded_df.reset_index(drop=True)], axis=1)
 
-    # Scale numerical features
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-    X = pd.DataFrame(X_scaled, columns=X.columns)
+# Ensure all columns are numeric and handle NaN values
+X = X.apply(pd.to_numeric, errors='coerce')  # Convert all columns to numeric
+X = X.fillna(0)  # Replace any NaN values with 0
 
-    st.success("Preprocessing completed successfully!")
+# Scale numerical features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+X = pd.DataFrame(X_scaled, columns=X.columns)
+
+st.success("Preprocessing completed successfully!")
+
 
     # Train-test split
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)

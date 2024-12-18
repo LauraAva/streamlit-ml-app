@@ -49,19 +49,19 @@ st.success("Preprocessing completed successfully!")
 # Train-test split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
- # Model selection
-    st.write("### Model Training")
-    model_choice = st.selectbox("Choose a model:", ["Random Forest", "Logistic Regression", "Decision Tree"])
+# Model selection
+st.write("### Model Training")
+model_choice = st.selectbox("Choose a model:", ["Random Forest", "Logistic Regression", "Decision Tree"])
     
-    # Initialize the model
-    if model_choice == "Random Forest":
-        model = RandomForestClassifier()
-        if st.checkbox("Enable Hyperparameter Tuning"):
-            param_grid = {"n_estimators": [50, 100, 200], "max_depth": [10, 20, None]}
-            grid_search = GridSearchCV(model, param_grid, cv=3)
-            grid_search.fit(X_train, y_train)
-            model = grid_search.best_estimator_
-            st.write(f"Best Parameters: {grid_search.best_params_}")
+# Initialize the model
+if model_choice == "Random Forest":
+    model = RandomForestClassifier()
+    if st.checkbox("Enable Hyperparameter Tuning"):
+        param_grid = {"n_estimators": [50, 100, 200], "max_depth": [10, 20, None]}
+        grid_search = GridSearchCV(model, param_grid, cv=3)
+        grid_search.fit(X_train, y_train)
+        model = grid_search.best_estimator_
+        st.write(f"Best Parameters: {grid_search.best_params_}")
     elif model_choice == "Decision Tree":
         model = DecisionTreeClassifier(random_state=42)
         if st.checkbox("Enable Hyperparameter Tuning"):

@@ -32,7 +32,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Custom Sidebar for Navigation
-st.sidebar.image("logo.png", use_column_width=True)  # Add your project logo
+st.sidebar.image("logo.png", use_container_width =True)  # Add your project logo
 st.sidebar.title("🔍 CO₂ Emission Analysis")
 st.sidebar.markdown("---")  # Separator line
 
@@ -43,16 +43,17 @@ page_selection = st.sidebar.radio("Go to", pages)
 
 # Navigate between pages using query parameters
 if page_selection == "🏠 Home":
-    st.experimental_set_query_params(page="Home")
+    st.query_params.update({"page": "Home"})  # Updated to st.query_params
 elif page_selection == "📄 Data Loading":
-    st.experimental_set_query_params(page="Data_Loading")
+    st.query_params.update({"page": "Data_Loading"})
 elif page_selection == "📊 Exploration":
-    st.experimental_set_query_params(page="Exploration")
+    st.query_params.update({"page": "Exploration"})
 elif page_selection == "🧪 Modeling":
-    st.experimental_set_query_params(page="Modeling")
+    st.query_params.update({"page": "Modeling"})
 else:
-    st.experimental_set_query_params(page="Predictions")
+    st.query_params.update({"page": "Predictions"})
 
+# Main Content
 st.title("CO2 Emission Analysis & Prediction Pipeline")
 st.write("""
 ## Project Overview

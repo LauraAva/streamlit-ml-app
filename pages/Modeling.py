@@ -82,95 +82,44 @@ st.write("### Model Training")
 model_choice = st.selectbox("Choose a model:", ["Random Forest", "Logistic Regression", "Decision Tree"])
 
 # Initialize model
-if model_choice == "Random Forest":
-    st.write("Training Random Forest...")
-    model = RandomForestClassifier(n_estimators=50, max_depth=10, random_state=42)
-    if st.checkbox("Enable Hyperparameter Tuning"):
-        param_grid = {"n_estimators": [50, 100, 200], "max_depth": [10, 20, None]}
-        grid_search = GridSearchCV(model, param_grid, cv=3, scoring="accuracy")
-        grid_search.fit(X_train, y_train)
-        model = grid_search.best_estimator_
-        st.write(f"Best Parameters: {grid_search.best_params_}")
+# Train the model
+try:
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
 
-elif model_choice == "Decision Tree":
-    st.write("Training Decision Tree...")
-    model = DecisionTreeClassifier(random_state=42)
-    if st.checkbox("Enable Hyperparameter Tuning"):
-        param_grid = {"max_depth": [5, 10, 20, None], "min_samples_split": [2, 5, 10]}
-        grid_search = GridSearchCV(model, param_grid, cv=3, scoring="accuracy")
-        grid_search.fit(X_train, y_train)
-        model = grid_search.best_estimator_
-        st.write(f"Best Parameters: {grid_search.best_params_}")
+    # Display metrics only if y_pred is defined
+    st.write(f"**Accuracy:** {accuracy_score(y_test, y_pred):.2f}")
+    st.text("Classification Report:")
+    st.text(classification_report(y_test, y_pred))
 
-elif model_choice == "Logistic Regression":
-    st.write("Training Logistic Regression...")
+    # Confusion matrix
+    st.write("### Confusion Matrix")
+    fig, ax = plt.subplots()
+    ConfusionMatrixDisplay.from_estimator(model, X_test, y_test, cmap="Blues", ax=ax)
+    st.pyplot(fig)
 
-    try:
-        # Add solver and reduce max_iter
-        model = LogisticRegression(
-            solver="saga",  # Optimized for sparse data
-            max_iter=500,   # Reasonable max iterations
-            verbose=1       # Show progress
-        )
+    # Feature importance for Random Forest and Decision Tree
+    if model_choice in ["Random Forest", "Decision Tree"]:
+        st.write("### Feature Importance")
+        feature_importances = model.feature_importances_
+        sorted_indices = feature_importances.argsort()[::-1]  # Sort in descending order
 
-        # Optional: PCA to reduce dimensions
-        if st.checkbox("Enable PCA for Dimensionality Reduction"):
-            from sklearn.decomposition import PCA
-            n_components = st.slider("Select number of PCA components:", 
-                                     5, min(X_train.shape[1], 50), 10)
-            pca = PCA(n_components=n_components)
-            X_train = pca.fit_transform(X_train)
-            X_test = pca.transform(X_test)
-            st.write(f"Dataset reduced to {n_components} components.")
+        # Show only top 10 features
+        top_n = st.slider("Select top N features to display:", min_value=5, max_value=20, value=10)
+        top_features = sorted_indices[:top_n]
 
-        # Train the model with warnings suppressed for Convergence issues
-        with warnings.catch_warnings():
-            warnings.filterwarnings("ignore", category=ConvergenceWarning)
-            model.fit(X_train, y_train)
+        # Plot top N features
+        plt.figure(figsize=(10, 6))
+        plt.bar(range(top_n), feature_importances[top_features], align="center")
+        plt.xticks(range(top_n), X.columns[top_features], rotation=45, ha="right")
+        plt.title(f"Top {top_n} Feature Importance")
+        plt.xlabel("Features")
+        plt.ylabel("Importance")
+        plt.tight_layout()
+        st.pyplot(plt.gcf())
 
-        # Predict and evaluate
-        y_pred = model.predict(X_test)
-        st.write(f"**Accuracy:** {accuracy_score(y_test, y_pred):.2f}")
-        st.text("Classification Report:")
-        st.text(classification_report(y_test, y_pred))
-
-    except Exception as e:
-        st.error(f"An error occurred during training: {e}")
-
-
-# Step 11: Evaluate the model
-st.write(f"**Accuracy:** {accuracy_score(y_test, y_pred):.2f}")
-st.text("Classification Report:")
-st.text(classification_report(y_test, y_pred))
-
-# Confusion matrix
-st.write("### Confusion Matrix")
-fig, ax = plt.subplots()
-ConfusionMatrixDisplay.from_estimator(model, X_test, y_test, cmap="Blues", ax=ax)
-st.pyplot(fig)
-
-# Feature importance for Random Forest and Decision Tree
-if model_choice in ["Random Forest", "Decision Tree"]:
-    st.write("### Feature Importance")
-
-    # Retrieve and sort feature importances
-    feature_importances = model.feature_importances_
-    sorted_indices = feature_importances.argsort()[::-1]  # Sort in descending order
-
-    # Show only top 10 features
-    top_n = st.slider("Select top N features to display:", min_value=5, max_value=20, value=10)
-    top_features = sorted_indices[:top_n]
-
-    # Plot top N features
-    plt.figure(figsize=(10, 6))
-    plt.bar(range(top_n), feature_importances[top_features], align="center")
-    plt.xticks(range(top_n), X.columns[top_features], rotation=45, ha="right")
-    plt.title(f"Top {top_n} Feature Importance")
-    plt.xlabel("Features")
-    plt.ylabel("Importance")
-    plt.tight_layout()
-
-    st.pyplot(plt.gcf())
+except Exception as e:
+    st.error(f"An error occurred during model training or evaluation: {str(e)}")
 
 # Step 12: Save the model to session state
 st.session_state['model'] = model

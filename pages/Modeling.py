@@ -5,6 +5,7 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
+from sklearn.linear_model import LogisticRegression  # Add this import
 
 st.title("Model Training and Evaluation")
 

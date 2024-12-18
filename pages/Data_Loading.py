@@ -24,7 +24,6 @@ else:
     else:
         df = st.session_state['data']
 
-st.dataframe(df)
 
 # Display Dataset Preview
 if st.session_state['data'] is not None:

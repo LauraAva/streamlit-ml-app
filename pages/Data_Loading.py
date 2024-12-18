@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
 
-st.set_page_config(page_title="Data Loading", page_icon="📄")
-
 st.title("Dataset Loading and Exploration")
 
 # Ensure session state is initialized

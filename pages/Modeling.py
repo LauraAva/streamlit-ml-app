@@ -7,7 +7,15 @@ from sklearn.metrics import accuracy_score, classification_report, ConfusionMatr
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression  # Add this import
 
+
+st.set_page_config(page_title="Modeling", page_icon="📊")
 st.title("Model Training and Evaluation")
+
+# Check if dataset exists in session state
+if 'data' not in st.session_state or st.session_state['data'] is None:
+    st.error("No dataset found! Please upload or load a dataset from the 'Data Loading' page first.")
+    st.stop()
+
 
 # Retrieve dataset
 df = st.session_state.get('data', None)

@@ -17,9 +17,10 @@ else:
     df = pd.read_csv("cl_union_cleaned_BI.csv")
     st.session_state['data'] = df
 
-# Fix Year column (convert to integer, remove commas)
+# Fix Year column: remove commas and convert to integer
 if 'Year' in df.columns:
-    df['Year'] = df['Year'].astype(int)  # Convert Year column to integer
+    df['Year'] = df['Year'].replace({',': ''}, regex=True)  # Remove commas
+    df['Year'] = pd.to_numeric(df['Year'], errors='coerce').astype('Int64')  # Convert to integer
     st.session_state['data'] = df
 
 # Display dataset preview

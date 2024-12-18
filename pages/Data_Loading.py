@@ -21,6 +21,13 @@ else:
     df = pd.read_csv("cl_union_cleaned_BI_combined_file.csv")
     st.session_state['data'] = df  # Save default dataset to session state
 
+# Display Dataset Preview
+if st.session_state['data'] is not None:
+    st.write("### Dataset Preview:")
+    st.dataframe(st.session_state['data'].head())
+    st.write("### Dataset Information:")
+    st.write(st.session_state['data'].info())
+
 # Fix Year column: remove commas and convert to integer
 if 'Year' in df.columns:
     df['Year'] = df['Year'].replace({',': ''}, regex=True)  # Remove commas

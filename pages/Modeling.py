@@ -3,9 +3,10 @@ import pandas as pd
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score, classification_report, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
-from sklearn.linear_model import LogisticRegression  # Add this import
 
 
 st.set_page_config(page_title="Modeling", page_icon="📊")
@@ -18,14 +19,12 @@ if 'data' not in st.session_state or st.session_state['data'] is None:
 
 
 # Retrieve dataset
-df = st.session_state.get('data', None)
-if df is not None:
-    # Preprocess data
-    st.write("### Preprocessing Steps")
-    target_column = "CO2_class"
-    if target_column not in df.columns:
-        st.error("Target column 'CO2_class' not found!")
-        st.stop()
+df = st.session_state.get['data']
+st.write("### Preprocessing Steps")
+target_column = "CO2_class"
+if target_column not in df.columns:
+    st.error("Target column 'CO2_class' not found!")
+    st.stop()
 
     X = df.drop(columns=[target_column])
     y = df[target_column]
@@ -82,6 +81,7 @@ if model_choice == "Random Forest":
             model = grid_search.best_estimator_
             st.write(f"Best Parameters: {grid_search.best_params_}")
     else:
+        st.write("Training Logistic Regression...")
         model = LogisticRegression(max_iter=1000)
 
     # Train model
@@ -112,5 +112,3 @@ if model_choice == "Random Forest":
 
     # Save the model to session state
     st.session_state['model'] = model
-else:
-    st.warning("Please load a dataset first.")

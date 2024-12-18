@@ -17,9 +17,14 @@ if uploaded_file is not None:
     st.success("Dataset loaded successfully!")
 else:
     # Default Dataset
-    st.write("Using preloaded dataset:")
-    df = pd.read_csv("cl_union_cleaned_BI_combined_file.csv")
-    st.session_state['data'] = df  # Save default dataset to session state
+    if 'data' not in st.session_state:   
+        st.write("Using preloaded dataset:")
+        df = pd.read_csv("cl_union_cleaned_BI_combined_file.csv")
+        st.session_state['data'] = df  # Save default dataset to session state
+    else:
+        df = st.session_state['data']
+
+st.dataframe(df)
 
 # Display Dataset Preview
 if st.session_state['data'] is not None:

@@ -58,17 +58,28 @@ if df is not None:
         st.pyplot(plt.gcf())
 
     ### Interactive Dataset Details ###
-    st.write("### Dataset Details")
-    st.write("Use the filters below to interactively view the dataset.")
+  st.write("### Dataset Details")
+st.write("Use the filters below to interactively view the dataset.")
 
-    # Column selection
-    columns_to_display = st.multiselect("Select columns to display:", df.columns, default=df.columns)
+# Column selection
+columns_to_display = st.multiselect("Select columns to display:", df.columns, default=df.columns)
 
-    # Row filter
-    rows_to_display = st.slider("Select number of rows to display:", min_value=5, max_value=len(df), value=10)
+# Row filter
+rows_to_display = st.slider("Select number of rows to display:", min_value=5, max_value=len(df), value=10)
 
-    # Display filtered dataset
-    st.dataframe(df[columns_to_display].head(rows_to_display))
+# Sorting options
+sort_column = st.selectbox("Select a column to sort by:", columns_to_display)
+sort_order = st.radio("Select sorting order:", ["Ascending", "Descending"], index=0)
+
+# Apply sorting
+if sort_column:
+    sorted_df = df.sort_values(by=sort_column, ascending=(sort_order == "Ascending"))
+else:
+    sorted_df = df
+
+# Display filtered and sorted dataset
+st.dataframe(sorted_df[columns_to_display].head(rows_to_display))
+
 
     ### Download Filtered Dataset ###
     st.write("### Download Dataset")

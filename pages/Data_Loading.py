@@ -5,17 +5,29 @@ st.set_page_config(page_title="Data Loading", page_icon="📄")
 
 st.title("Dataset Loading and Exploration")
 
+# Ensure session state is initialized
+if 'data' not in st.session_state:
+    st.session_state['data'] = None  # Initialize session state data
+
 # File upload widget
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
-    st.session_state['data'] = df
+    st.session_state['data'] = df  # Save dataset to session state
     st.success("Dataset loaded successfully!")
 else:
     # Default Dataset
     st.write("Using preloaded dataset:")
     df = pd.read_csv("cl_union_cleaned_BI_combined_file.csv")
-    st.session_state['data'] = df
+    st.session_state['data'] = df  # Save default dataset to session state
+
+# Display Dataset Summary
+if st.session_state['data'] is not None:
+    st.write("### Dataset Preview:")
+    st.dataframe(st.session_state['data'].head())
+    st.write("### Dataset Summary:")
+    st.write(st.session_state['data'].describe())
+
 
 # Fix Year column: remove commas and convert to integer
 if 'Year' in df.columns:
@@ -33,10 +45,13 @@ if 'Year' in df.columns:
 else:
     summary_df = df.describe()
 
-# Display dataset summary
-st.write("### Dataset Summary:")
-st.write(summary_df)
-
+# Display Dataset Summary
+if st.session_state['data'] is not None:
+    st.write("### Dataset Preview:")
+    st.dataframe(st.session_state['data'].head())
+    st.write("### Dataset Summary:")
+    st.write(st.session_state['data'].describe())
+    
 # Display missing value statistics
 st.write("### Missing Value Statistics:")
 st.write(df.isnull().sum())

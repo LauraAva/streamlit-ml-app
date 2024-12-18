@@ -7,7 +7,7 @@ from utils import setup_sidebar
 # Set up the sidebar
 setup_sidebar()
 
-st.title("📄 Data Exploration & Vizualisations")
+st.title("📊 Data Exploration & Vizualisations")
 st.write("Upload your dataset here or use the preloaded dataset.")
 
 # File upload widget

@@ -31,7 +31,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.set_page_config(page_title="Home", page_icon="🏠")
 # Custom Sidebar for Navigation
 st.sidebar.image("your_logo.png", use_column_width=True)  # Add your project logo
 st.sidebar.title("🔍 CO₂ Emission Analysis")

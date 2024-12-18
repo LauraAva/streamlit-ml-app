@@ -8,7 +8,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 
-st.set_page_config(page_title="Modeling", page_icon="📊")
 st.title("Model Training and Evaluation")
 
 # Step 1: Retrieve dataset from session state

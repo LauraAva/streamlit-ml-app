@@ -55,13 +55,13 @@ page_selection = st.sidebar.radio("Go to", pages)
 if page_selection == "🏠 Home":
     st.write("## Welcome to the CO₂ Project Home Page!")
 elif page_selection == "📄 Data Loading":
-    st.experimental_set_query_params(page="Data_Loading")
+    st.query_params (page="Data_Loading")
 elif page_selection == "📊 Exploration":
-    st.experimental_set_query_params(page="Exploration")
+    st.query_params (page="Exploration")
 elif page_selection == "🧪 Modeling":
-    st.experimental_set_query_params(page="Modeling")
+    st.query_params (page="Modeling")
 else:
-    st.experimental_set_query_params(page="Predictions")
+    st.query_params (page="Predictions")
 
 # Main Content for Home Page
 st.title("CO₂ Emission Analysis & Prediction Pipeline")

@@ -19,7 +19,13 @@ if 'data' not in st.session_state or st.session_state['data'] is None:
 
 
 # Retrieve dataset
+# Ensure dataset is loaded from session state
 df = st.session_state.get('data', None)
+
+if df is None:
+    st.error("No dataset found! Please upload or load a dataset from the 'Data Loading' page first.")
+    st.stop()
+
 st.write("### Preprocessing Steps")
 target_column = "CO2_class"
 if target_column not in df.columns:
@@ -31,6 +37,14 @@ if target_column not in df.columns:
 
    # Encode categorical features
 categorical_cols = ['brand', 'Model_file', 'range', 'Group', 'Country']
+missing_cols = [col for col in categorical_cols if col not in X.columns]
+
+if missing_cols:
+    st.error(f"The following categorical columns are missing: {missing_cols}")
+    st.stop()
+
+# Encode categorical features
+st.write("Encoding categorical features...")
 encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
 
 # Perform encoding and get feature names

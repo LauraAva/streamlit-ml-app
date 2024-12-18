@@ -54,9 +54,13 @@ st.query_params.update({"page": pages[page_selection]})
 if page_selection == "🏠 Home":
     st.query_params.update({"page": "Home"})
 elif page_selection == "📄 Data Loading":
+    st.query_params.update({"page": "Data_Loading"})
 elif page_selection == "📊 Exploration":
+    st.query_params.update({"page": "Exploration"})
 elif page_selection == "🧪 Modeling":
-elif page_selection == "🔮 Predictions":
+    st.query_params.update({"page": "Modeling"})
+else 
+    st.query_params.update({"page": "Predictions"})
 
 
 # Main Content for Home Page

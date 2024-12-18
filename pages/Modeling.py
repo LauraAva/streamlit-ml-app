@@ -19,7 +19,7 @@ if 'data' not in st.session_state or st.session_state['data'] is None:
 
 
 # Retrieve dataset
-df = st.session_state.get['data']
+df = st.session_state.get('data', None)
 st.write("### Preprocessing Steps")
 target_column = "CO2_class"
 if target_column not in df.columns:

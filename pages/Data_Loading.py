@@ -53,7 +53,7 @@ if st.session_state['data'] is not None:
 
 ''')
     
- Fix Year column: remove commas and convert to integer
+ # Fix Year column: remove commas and convert to integer
 if 'Year' in st.session_state['data'].columns:
     df = st.session_state['data']
     df['Year'] = df['Year'].replace({',': ''}, regex=True)  # Remove commas

@@ -37,22 +37,27 @@ st.sidebar.image("logo.png", use_container_width=True)  # Logo at the top
 st.sidebar.title("🔍 CO₂ Emission Analysis")
 st.sidebar.markdown("---")  # Separator line
 
-# Sidebar navigation options
-pages = ["🏠 Home", "📄 Data Loading", "📊 Exploration", "🧪 Modeling", "🔮 Predictions"]
-page_selection = st.sidebar.radio("Go to", pages)
+# Sidebar Navigation Links
+pages = {
+    "🏠 Home": "Home",
+    "📄 Data Loading": "Data_Loading",
+    "📊 Exploration": "Exploration",
+    "🧪 Modeling": "Modeling",
+    "🔮 Predictions": "Predictions"
+}
+
+page_selection = st.sidebar.radio("Go to", list(pages.keys()))
+# Redirect to selected page using query params
+st.query_params.update({"page": pages[page_selection]})
 
 # Conditional navigation
 if page_selection == "🏠 Home":
-    st.experimental_set_query_params(page="Home")
-    st.switch_page("pages/Home.py")
+    st.query_params.update({"page": "Home"})
 elif page_selection == "📄 Data Loading":
-    st.switch_page("pages/Data_Loading.py")
 elif page_selection == "📊 Exploration":
-    st.switch_page("pages/Exploration.py")
 elif page_selection == "🧪 Modeling":
-    st.switch_page("pages/Modeling.py")
 elif page_selection == "🔮 Predictions":
-    st.switch_page("pages/Predictions.py")
+
 
 # Main Content for Home Page
 st.title("CO₂ Emission Analysis & Prediction Pipeline")

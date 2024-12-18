@@ -7,8 +7,23 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
+from utils import setup_sidebar
 
-st.title("Model Training and Evaluation")
+# Set up the sidebar
+setup_sidebar()
+
+st.title("🧪Model Training and Evaluation")
+st.write("Upload your dataset here or use the preloaded dataset.")
+
+# File upload widget
+uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
+    st.session_state['data'] = df
+    st.success("Dataset loaded successfully!")
+else:
+    st.warning("Please upload a dataset.")
+
 
 # Step 1: Retrieve dataset from session state
 if 'data' not in st.session_state or st.session_state['data'] is None:

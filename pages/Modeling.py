@@ -39,10 +39,6 @@ if df is not None:
     X = pd.DataFrame(X_scaled, columns=X.columns)
 
     st.success("Preprocessing completed successfully!")
-else:
-    st.warning("Please load a dataset first.")
-
-
 
     # Train-test split
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -87,5 +83,3 @@ else:
     st.session_state['model'] = model
 else:
     st.warning("Please load a dataset first.")
-
-

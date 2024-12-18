@@ -39,7 +39,6 @@ if st.session_state['data'] is not None:
 
     The datasets contain values for CO2 emissions, measured in grams per kilometre (g/km). This is the primary metric for evaluating the environmental impact of the vehicles. Further, other pollutants such as NOx (Nitrogen Oxides), which are harmful gases contributing to air pollution and respiratory problems, HC (Hydrocarbons), organic compounds that contribute to smog and ground-level ozone, and particles that can penetrate deep into the lungs and cause health issues have been provided. Lastly, fuel consumption under different driving conditions, such as urban, extra-urban and mixed, is another valuable variable in the dataset and measured in litres per 100 kilometres (l/100km). 
 
-    st.write(st.session_state['data'].info())
 ''')
     
 # Fix Year column: remove commas and convert to integer
@@ -49,10 +48,6 @@ if 'Year' in df.columns:
     st.session_state['data'] = df
 
 # Display Dataset Summary
-if st.session_state['data'] is not None:
-    st.write("### Dataset Preview:")
-    st.dataframe(st.session_state['data'].head())
-
     # Exclude 'Year' column from summary
     if 'Year' in st.session_state['data'].columns:
         summary_df = st.session_state['data'].drop(columns=['Year']).describe()

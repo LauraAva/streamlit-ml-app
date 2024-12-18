@@ -18,7 +18,7 @@ This app enables you to:
 - Upload your dataset or use the provided one.
 
 ## Dataset:
-- Preloaded Dataset: `cl_union_cleaned_BI.csv`
+- Preloaded Dataset: `cl_union_cleaned_BI_combined_file.csv`
 - Target Variable: CO2 Emission Classes (A to G)
 
 Navigate through the sections using the sidebar! 👈  

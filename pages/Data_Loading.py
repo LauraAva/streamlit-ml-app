@@ -43,4 +43,7 @@ if st.session_state['data'] is not None:
 
     # Display missing value statistics
     st.write("### Missing Value Statistics:")
-    st.write(st.session_state['data'].isnull().sum())
+    missing_values = st.session_state['data'].isnull().sum().reset_index()
+    missing_values.columns = ['Column', 'Missing Values']
+    st.dataframe(missing_values)
+

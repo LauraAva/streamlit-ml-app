@@ -45,8 +45,8 @@ X = pd.DataFrame(X_scaled, columns=X.columns)
 st.success("Preprocessing completed successfully!")
 
 
-    # Train-test split
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
     # Model selection
     st.write("### Model Training")

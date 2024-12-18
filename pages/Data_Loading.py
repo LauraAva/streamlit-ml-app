@@ -28,7 +28,6 @@ if st.session_state['data'] is not None:
     st.write("### Dataset Summary:")
     st.write(st.session_state['data'].describe())
 
-
 # Fix Year column: remove commas and convert to integer
 if 'Year' in df.columns:
     df['Year'] = df['Year'].replace({',': ''}, regex=True)  # Remove commas
@@ -45,13 +44,6 @@ if 'Year' in df.columns:
 else:
     summary_df = df.describe()
 
-# Display Dataset Summary
-if st.session_state['data'] is not None:
-    st.write("### Dataset Preview:")
-    st.dataframe(st.session_state['data'].head())
-    st.write("### Dataset Summary:")
-    st.write(st.session_state['data'].describe())
-    
 # Display missing value statistics
 st.write("### Missing Value Statistics:")
 st.write(df.isnull().sum())

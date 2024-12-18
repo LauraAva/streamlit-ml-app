@@ -32,7 +32,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Custom Sidebar for Navigation
-st.sidebar.image("your_logo.png", use_column_width=True)  # Add your project logo
+st.sidebar.image("logo.png", use_column_width=True)  # Add your project logo
 st.sidebar.title("🔍 CO₂ Emission Analysis")
 st.sidebar.markdown("---")  # Separator line
 

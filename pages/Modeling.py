@@ -78,16 +78,51 @@ st.success("Preprocessing completed successfully!")
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # Step 10: Model selection and training
+# Initialize model placeholder
+model = None
+
+# Model selection and training
 st.write("### Model Training")
 model_choice = st.selectbox("Choose a model:", ["Random Forest", "Logistic Regression", "Decision Tree"])
 
-# Initialize model
-# Train the model
 try:
+    if model_choice == "Random Forest":
+        st.write("Training Random Forest...")
+        model = RandomForestClassifier(n_estimators=50, max_depth=10, random_state=42)
+        if st.checkbox("Enable Hyperparameter Tuning"):
+            param_grid = {"n_estimators": [50, 100, 200], "max_depth": [10, 20, None]}
+            grid_search = GridSearchCV(model, param_grid, cv=3, scoring="accuracy")
+            grid_search.fit(X_train, y_train)
+            model = grid_search.best_estimator_
+            st.write(f"Best Parameters: {grid_search.best_params_}")
+
+    elif model_choice == "Decision Tree":
+        st.write("Training Decision Tree...")
+        model = DecisionTreeClassifier(random_state=42)
+        if st.checkbox("Enable Hyperparameter Tuning"):
+            param_grid = {"max_depth": [5, 10, 20, None], "min_samples_split": [2, 5, 10]}
+            grid_search = GridSearchCV(model, param_grid, cv=3, scoring="accuracy")
+            grid_search.fit(X_train, y_train)
+            model = grid_search.best_estimator_
+            st.write(f"Best Parameters: {grid_search.best_params_}")
+
+    elif model_choice == "Logistic Regression":
+        st.write("Training Logistic Regression...")
+        model = LogisticRegression(max_iter=1000)
+        model.fit(X_train, y_train)
+
+    else:
+        st.error("No model selected.")
+        st.stop()
+
+    # Train the model and predict
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
 
-    # Display metrics only if y_pred is defined
+    # Save the trained model in session state
+    st.session_state['model'] = model
+
+    # Evaluation metrics
     st.write(f"**Accuracy:** {accuracy_score(y_test, y_pred):.2f}")
     st.text("Classification Report:")
     st.text(classification_report(y_test, y_pred))
@@ -102,13 +137,13 @@ try:
     if model_choice in ["Random Forest", "Decision Tree"]:
         st.write("### Feature Importance")
         feature_importances = model.feature_importances_
-        sorted_indices = feature_importances.argsort()[::-1]  # Sort in descending order
+        sorted_indices = feature_importances.argsort()[::-1]
 
-        # Show only top 10 features
+        # Show top features
         top_n = st.slider("Select top N features to display:", min_value=5, max_value=20, value=10)
         top_features = sorted_indices[:top_n]
 
-        # Plot top N features
+        # Plot feature importance
         plt.figure(figsize=(10, 6))
         plt.bar(range(top_n), feature_importances[top_features], align="center")
         plt.xticks(range(top_n), X.columns[top_features], rotation=45, ha="right")

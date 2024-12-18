@@ -14,7 +14,7 @@ if uploaded_file is not None:
 else:
     # Default Dataset
     st.write("Using preloaded dataset:")
-    df = pd.read_csv("cl_union_cleaned_BI.csv")
+    df = pd.read_csv("cl_union_cleaned_BI_combined_file.csv")
     st.session_state['data'] = df
 
 # Fix Year column: remove commas and convert to integer

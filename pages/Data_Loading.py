@@ -34,7 +34,7 @@ else:
     summary_df = df.describe()
 
 # Display dataset summary
-st.write("### Dataset Summary (excluding 'Year'):")
+st.write("### Dataset Summary:")
 st.write(summary_df)
 
 # Display missing value statistics

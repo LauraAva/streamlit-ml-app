@@ -1,6 +1,58 @@
 import streamlit as st
+# Global CSS Styling
+st.markdown("""
+    <style>
+    /* Main Background */
+    .main {
+        background-color: #f5f7fa;
+    }
+    /* Sidebar styling */
+    [data-testid="stSidebar"] {
+        background-color: #2b4c7e;
+        color: white;
+    }
+    [data-testid="stSidebar"] h1, 
+    [data-testid="stSidebar"] h2, 
+    [data-testid="stSidebar"] h3 {
+        color: #f5f7fa;
+    }
+    /* Title styling */
+    .stTitle {
+        color: #2b4c7e;
+        font-weight: bold;
+        text-align: center;
+    }
+    /* Buttons */
+    .stButton>button {
+        background-color: #2b4c7e;
+        color: white;
+        border-radius: 10px;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 st.set_page_config(page_title="Home", page_icon="🏠")
+# Custom Sidebar for Navigation
+st.sidebar.image("your_logo.png", use_column_width=True)  # Add your project logo
+st.sidebar.title("🔍 CO₂ Emission Analysis")
+st.sidebar.markdown("---")  # Separator line
+
+# Sidebar navigation options
+st.sidebar.write("### Navigation")
+pages = ["🏠 Home", "📄 Data Loading", "📊 Exploration", "🧪 Modeling", "🔮 Predictions"]
+page_selection = st.sidebar.radio("Go to", pages)
+
+# Navigate between pages using query parameters
+if page_selection == "🏠 Home":
+    st.experimental_set_query_params(page="Home")
+elif page_selection == "📄 Data Loading":
+    st.experimental_set_query_params(page="Data_Loading")
+elif page_selection == "📊 Exploration":
+    st.experimental_set_query_params(page="Exploration")
+elif page_selection == "🧪 Modeling":
+    st.experimental_set_query_params(page="Modeling")
+else:
+    st.experimental_set_query_params(page="Predictions")
 
 st.title("CO2 Emission Analysis & Prediction Pipeline")
 st.write("""

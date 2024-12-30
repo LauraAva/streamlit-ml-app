@@ -145,7 +145,7 @@ try:
     
         st.write(f"Logistic Regression training took {end_time - start_time:.2f} seconds.")
         
-    else:
+else:
         st.error("No model selected.")
         st.stop()
 

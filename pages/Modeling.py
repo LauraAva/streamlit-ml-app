@@ -143,7 +143,7 @@ try:
         model.fit(X_train, y_train)
         end_time = time.time()
     
-    st.write(f"Logistic Regression training took {end_time - start_time:.2f} seconds.")
+        st.write(f"Logistic Regression training took {end_time - start_time:.2f} seconds.")
         
     else:
         st.error("No model selected.")

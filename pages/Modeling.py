@@ -10,7 +10,10 @@ import matplotlib.pyplot as plt
 from utils import setup_sidebar
 from sklearn.exceptions import ConvergenceWarning
 import warnings
-
+from sklearn.feature_selection import VarianceThreshold
+# Apply variance threshold
+selector = VarianceThreshold(threshold=0.01)  # Remove low-variance features
+X = selector.fit_transform(X)
 # Set up the sidebar
 setup_sidebar()
 
@@ -98,7 +101,7 @@ try:
 
     elif model_choice == "Decision Tree":
         st.write("Training Decision Tree...")
-        model = DecisionTreeClassifier(random_state=42)
+        model = DecisionTreeClassifier(max_depth=10, min_samples_split=5, random_state=42)
         if st.checkbox("Enable Hyperparameter Tuning"):
             param_grid = {"max_depth": [5, 10, 20, None], "min_samples_split": [2, 5, 10]}
             grid_search = GridSearchCV(model, param_grid, cv=3, scoring="accuracy")
@@ -143,18 +146,28 @@ try:
         top_n = st.slider("Select top N features to display:", min_value=5, max_value=20, value=10)
         top_features = sorted_indices[:top_n]
 
-        # Plot feature importance
-        plt.figure(figsize=(10, 6))
-        plt.bar(range(top_n), feature_importances[top_features], align="center")
-        plt.xticks(range(top_n), X.columns[top_features], rotation=45, ha="right")
-        plt.title(f"Top {top_n} Feature Importance")
-        plt.xlabel("Features")
-        plt.ylabel("Importance")
-        plt.tight_layout()
-        st.pyplot(plt.gcf())
+        # Calculate cumulative importance
+cumulative_importance = feature_importances[sorted_indices].cumsum()
+
+# Plot feature importance with cumulative percentage
+plt.figure(figsize=(12, 8))
+plt.bar(range(top_n), feature_importances[top_features], align="center", label="Feature Importance")
+plt.plot(range(top_n), cumulative_importance[:top_n], marker="o", color="red", label="Cumulative Importance")
+plt.xticks(range(top_n), X.columns[top_features], rotation=45, ha="right")
+plt.title(f"Top {top_n} Feature Importance with Cumulative Contribution")
+plt.xlabel("Features")
+plt.ylabel("Importance")
+plt.legend(loc="upper left")
+plt.tight_layout()
+st.pyplot(plt.gcf())
 
 except Exception as e:
     st.error(f"An error occurred during model training or evaluation: {str(e)}")
+
+
+st.write("### Encoded Features Summary")
+encoded_summary = pd.DataFrame(encoded_array, columns=encoder.get_feature_names_out(categorical_cols))
+st.write(encoded_summary.describe())
 
 # Step 12: Save the model to session state
 st.session_state['model'] = model

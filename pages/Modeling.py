@@ -71,9 +71,11 @@ X = X.fillna(0)  # Replace NaN values with 0
 st.write("Applying Variance Threshold to remove low-variance features...")
 selector = VarianceThreshold(threshold=0.01)  # Variance threshold set to 0.01
 X_selected = selector.fit_transform(X)
-selected_columns = [col for col, include in zip(X.columns, selector.get_support()) if include]
-X = pd.DataFrame(X_selected, columns=selected_columns)
 
+
+# Extract the column names for the selected features
+selected_columns = X.columns[selector.get_support()]
+X = pd.DataFrame(X_selected, columns=selected_columns)
 
 # Update column names based on selected features
 selected_columns = [col for col, include in zip(X.columns, selector.get_support()) if include]

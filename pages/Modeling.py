@@ -11,9 +11,7 @@ from utils import setup_sidebar
 from sklearn.exceptions import ConvergenceWarning
 import warnings
 from sklearn.feature_selection import VarianceThreshold
-# Apply variance threshold
-selector = VarianceThreshold(threshold=0.01)  # Remove low-variance features
-X = selector.fit_transform(X)
+
 # Set up the sidebar
 setup_sidebar()
 
@@ -68,6 +66,11 @@ X = pd.concat([X.reset_index(drop=True), encoded_df.reset_index(drop=True)], axi
 # Step 7: Ensure numeric data and handle NaN values
 X = X.apply(pd.to_numeric, errors='coerce')  # Convert all columns to numeric
 X = X.fillna(0)  # Replace NaN values with 0
+
+# Step 7a: Apply VarianceThreshold to remove low-variance features
+st.write("Applying Variance Threshold to remove low-variance features...")
+selector = VarianceThreshold(threshold=0.01)  # Variance threshold set to 0.01
+X = selector.fit_transform(X)
 
 # Step 8: Scale numerical features
 st.write("Scaling numerical features...")

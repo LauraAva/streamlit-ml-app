@@ -71,6 +71,9 @@ X = X.fillna(0)  # Replace NaN values with 0
 st.write("Applying Variance Threshold to remove low-variance features...")
 selector = VarianceThreshold(threshold=0.01)  # Variance threshold set to 0.01
 X_selected = selector.fit_transform(X)
+selected_columns = [col for col, include in zip(X.columns, selector.get_support()) if include]
+X = pd.DataFrame(X_selected, columns=selected_columns)
+
 
 # Update column names based on selected features
 selected_columns = [col for col, include in zip(X.columns, selector.get_support()) if include]
@@ -150,12 +153,13 @@ try:
         feature_importances = model.feature_importances_
         sorted_indices = feature_importances.argsort()[::-1]
 
+        # Calculate cumulative importance
+        cumulative_importance = feature_importances[sorted_indices].cumsum()
+        
         # Show top features
         top_n = st.slider("Select top N features to display:", min_value=5, max_value=20, value=10)
         top_features = sorted_indices[:top_n]
 
-        # Calculate cumulative importance
-        cumulative_importance = feature_importances[sorted_indices].cumsum()
 
         # Plot feature importance with cumulative percentage
         plt.figure(figsize=(12, 8))

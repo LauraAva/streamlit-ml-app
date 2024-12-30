@@ -136,7 +136,7 @@ try:
 
     elif model_choice == "Logistic Regression":
         st.write("Training Logistic Regression...")
-        model = LogisticRegression(max_iter=500, solver='saga', tol=1e-3, n_jobs=-1)
+        model = LogisticRegression(max_iter=500, solver='saga', tol=1e-3,  n_jobs=-1, class_weight='balanced')
         model.fit(X_train, y_train)
 
     else:

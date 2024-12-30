@@ -65,10 +65,12 @@ if df is not None:
         st.warning("Please select at least one column to display the correlation heatmap.")
 
 
-   ### Box Plot ###
-st.write("### Box Plot")
+# Ensure dataset is loaded
 if 'data' in st.session_state and st.session_state['data'] is not None:
     df = st.session_state['data']
+
+    ### Box Plot ###
+    st.write("### Box Plot")
     numeric_columns = df.select_dtypes(include='number').columns
 
     if len(numeric_columns) > 0:
@@ -82,9 +84,6 @@ if 'data' in st.session_state and st.session_state['data'] is not None:
             st.pyplot(plt.gcf())
     else:
         st.warning("No numeric columns available for box plot.")
-else:
-    st.warning("Please upload a dataset to display the box plot.")
-
 
     ### Interactive Dataset Details ###
     st.write("### Dataset Details")
@@ -122,3 +121,5 @@ else:
         file_name="filtered_data.csv", 
         mime="text/csv"
     )
+else:
+    st.warning("Please upload a dataset to display the box plot or view the dataset details.")

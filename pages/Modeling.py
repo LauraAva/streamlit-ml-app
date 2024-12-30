@@ -71,26 +71,28 @@ X = X.fillna(0)  # Replace NaN values with 0
 # Apply VarianceThreshold to remove low-variance features
 st.write("Applying Variance Threshold to remove low-variance features...")
 selector = VarianceThreshold(threshold=0.01)
+
+# Fit and transform
 X_selected = selector.fit_transform(X)
 
-# Debug: Check shape and selected features
+# Debugging: Check shapes and selected columns
+feature_variances = selector.variances_
+st.write(f"Feature variances: {feature_variances}")
 st.write(f"Shape of X before VarianceThreshold: {X.shape}")
 st.write(f"Shape of X after VarianceThreshold: {X_selected.shape}")
 
 selected_columns = X.columns[selector.get_support()]
 st.write(f"Number of selected columns: {len(selected_columns)}")
+st.write(f"Selected columns: {selected_columns}")
 
-# Ensure shapes match before creating DataFrame
+# Check for mismatched shapes
 if X_selected.shape[1] == len(selected_columns):
     X = pd.DataFrame(X_selected, columns=selected_columns)
+    st.success(f"VarianceThreshold applied successfully. {X.shape[1]} features retained.")
 else:
     st.error(f"Shape mismatch: X_selected has {X_selected.shape[1]} features, but selected_columns has {len(selected_columns)} columns.")
     st.stop()
 
-
-# Update column names based on selected features
-selected_columns = [col for col, include in zip(X.columns, selector.get_support()) if include]
-X = pd.DataFrame(X_selected, columns=selected_columns)
 
 # Step 8: Scale numerical features
 st.write("Scaling numerical features...")

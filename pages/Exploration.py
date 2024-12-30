@@ -65,12 +65,26 @@ if df is not None:
         st.warning("Please select at least one column to display the correlation heatmap.")
 
     ### Box Plot ###
-    st.write("### Box Plot")
-    if pd.api.types.is_numeric_dtype(df[column_to_plot]):
-        plt.figure(figsize=(8, 6))
-        sns.boxplot(y=df[column_to_plot], color='lightblue')
-        plt.title(f"Box Plot of {column_to_plot}")
-        st.pyplot(plt.gcf())
+   ### Box Plot ###
+st.write("### Box Plot")
+if 'data' in st.session_state and st.session_state['data'] is not None:
+    df = st.session_state['data']
+    numeric_columns = df.select_dtypes(include='number').columns
+
+    if len(numeric_columns) > 0:
+        column_to_plot = st.selectbox("Select a numeric column for the box plot:", numeric_columns)
+
+        if pd.api.types.is_numeric_dtype(df[column_to_plot]):
+            plt.figure(figsize=(8, 6))
+            sns.boxplot(y=df[column_to_plot], palette="Blues")
+            plt.title(f"Box Plot of {column_to_plot}")
+            plt.tight_layout()
+            st.pyplot(plt.gcf())
+    else:
+        st.warning("No numeric columns available for box plot.")
+else:
+    st.warning("Please upload a dataset to display the box plot.")
+
 
     ### Interactive Dataset Details ###
     st.write("### Dataset Details")

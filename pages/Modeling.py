@@ -70,7 +70,11 @@ X = X.fillna(0)  # Replace NaN values with 0
 # Step 7a: Apply VarianceThreshold to remove low-variance features
 st.write("Applying Variance Threshold to remove low-variance features...")
 selector = VarianceThreshold(threshold=0.01)  # Variance threshold set to 0.01
-X = selector.fit_transform(X)
+X_selected = selector.fit_transform(X)
+
+# Update column names based on selected features
+selected_columns = [col for col, include in zip(X.columns, selector.get_support()) if include]
+X = pd.DataFrame(X_selected, columns=selected_columns)
 
 # Step 8: Scale numerical features
 st.write("Scaling numerical features...")

@@ -122,5 +122,3 @@ else:
         file_name="filtered_data.csv", 
         mime="text/csv"
     )
-else:
-    st.warning("Please load a dataset first in the 'Dataset Loading' section.")

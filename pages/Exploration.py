@@ -64,7 +64,7 @@ if df is not None:
     else:
         st.warning("Please select at least one column to display the correlation heatmap.")
 
-    ### Box Plot ###
+
    ### Box Plot ###
 st.write("### Box Plot")
 if 'data' in st.session_state and st.session_state['data'] is not None:
@@ -108,11 +108,6 @@ else:
 
     # Display filtered and sorted dataset
     st.dataframe(sorted_df[columns_to_display].head(rows_to_display))
-
-# Check if dataset is loaded
-if 'data' in st.session_state and st.session_state['data'] is not None:
-    df = st.session_state['data']
-    columns_to_display = st.multiselect("Select columns to display:", df.columns, default=df.columns)
 
     ### Download Filtered Dataset ###
     st.write("### Download Dataset")

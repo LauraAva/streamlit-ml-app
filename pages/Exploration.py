@@ -109,6 +109,10 @@ else:
     # Display filtered and sorted dataset
     st.dataframe(sorted_df[columns_to_display].head(rows_to_display))
 
+# Check if dataset is loaded
+if 'data' in st.session_state and st.session_state['data'] is not None:
+    df = st.session_state['data']
+    columns_to_display = st.multiselect("Select columns to display:", df.columns, default=df.columns)
 
     ### Download Filtered Dataset ###
     st.write("### Download Dataset")
@@ -117,9 +121,11 @@ else:
         return data.to_csv(index=False).encode('utf-8')
     
     csv_data = convert_df_to_csv(df[columns_to_display])
-    st.download_button(label="Download Dataset", 
-                       data=csv_data, 
-                       file_name="filtered_data.csv", 
-                       mime="text/csv")
-    else:
+    st.download_button(
+        label="Download Dataset", 
+        data=csv_data, 
+        file_name="filtered_data.csv", 
+        mime="text/csv"
+    )
+else:
     st.warning("Please load a dataset first in the 'Dataset Loading' section.")

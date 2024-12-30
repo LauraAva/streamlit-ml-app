@@ -136,6 +136,7 @@ try:
     ConfusionMatrixDisplay.from_estimator(model, X_test, y_test, cmap="Blues", ax=ax)
     st.pyplot(fig)
 
+    
     # Feature importance for Random Forest and Decision Tree
     if model_choice in ["Random Forest", "Decision Tree"]:
         st.write("### Feature Importance")
@@ -147,19 +148,22 @@ try:
         top_features = sorted_indices[:top_n]
 
         # Calculate cumulative importance
-cumulative_importance = feature_importances[sorted_indices].cumsum()
+        cumulative_importance = feature_importances[sorted_indices].cumsum()
 
-# Plot feature importance with cumulative percentage
-plt.figure(figsize=(12, 8))
-plt.bar(range(top_n), feature_importances[top_features], align="center", label="Feature Importance")
-plt.plot(range(top_n), cumulative_importance[:top_n], marker="o", color="red", label="Cumulative Importance")
-plt.xticks(range(top_n), X.columns[top_features], rotation=45, ha="right")
-plt.title(f"Top {top_n} Feature Importance with Cumulative Contribution")
-plt.xlabel("Features")
-plt.ylabel("Importance")
-plt.legend(loc="upper left")
-plt.tight_layout()
-st.pyplot(plt.gcf())
+        # Plot feature importance with cumulative percentage
+        plt.figure(figsize=(12, 8))
+        plt.bar(range(top_n), feature_importances[top_features], align="center", label="Feature Importance")
+        plt.plot(range(top_n), cumulative_importance[:top_n], marker="o", color="red", label="Cumulative Importance")
+        plt.xticks(range(top_n), X.columns[top_features], rotation=45, ha="right")
+        plt.title(f"Top {top_n} Feature Importance with Cumulative Contribution")
+        plt.xlabel("Features")
+        plt.ylabel("Importance")
+        plt.legend(loc="upper left")
+        plt.tight_layout()
+        st.pyplot(plt.gcf())
+
+    
+
 
 except Exception as e:
     st.error(f"An error occurred during model training or evaluation: {str(e)}")

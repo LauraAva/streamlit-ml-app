@@ -44,12 +44,20 @@ else:
             else:
                 try:
                     # Encode categorical features
+                    st.write("Encoding categorical features...")
                     encoded_data = encoder.transform(new_data[categorical_cols])
                     encoded_df = pd.DataFrame(encoded_data, columns=encoder.get_feature_names_out(categorical_cols))
+
+                    # Drop original categorical columns and concatenate encoded features
                     new_data = new_data.drop(columns=categorical_cols, errors="ignore")
                     new_data = pd.concat([new_data.reset_index(drop=True), encoded_df.reset_index(drop=True)], axis=1)
 
+                    # Ensure numeric data and handle NaN values
+                    new_data = new_data.apply(pd.to_numeric, errors='coerce')
+                    new_data = new_data.fillna(0)
+
                     # Scale the data
+                    st.write("Scaling numerical features...")
                     new_data_scaled = scaler.transform(new_data)
                     new_data = pd.DataFrame(new_data_scaled, columns=new_data.columns)
 

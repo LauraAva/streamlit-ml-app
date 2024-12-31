@@ -215,6 +215,7 @@ st.session_state['model'] = model
 st.success(f"{model_choice} model training completed successfully!")
 st.session_state['encoder'] = encoder
 st.session_state['scaler'] = scaler
+st.session_state['expected_features'] = list(X.columns)
 
 # Step 13: Save and download preprocessed data
 # Save and download preprocessed data

@@ -43,18 +43,34 @@ else:
                 st.error(f"The following required columns are missing from the new dataset: {missing_cols}")
             else:
                 try:
+                     # Align categorical columns with encoder's expected feature set
+                    st.write("Aligning categorical columns...")
+                    for col in categorical_cols:
+                        if col not in new_data.columns:
+                            new_data[col] = "Unknown"
+
                     # Encode categorical features
                     st.write("Encoding categorical features...")
                     encoded_data = encoder.transform(new_data[categorical_cols])
-                    encoded_df = pd.DataFrame(encoded_data, columns=encoder.get_feature_names_out(categorical_cols))
+                    encoded_df = pd.DataFrame(
+                        encoded_data,
+                        columns=encoder.get_feature_names_out(categorical_cols),
+                        index=new_data.index
+                    )
 
                     # Drop original categorical columns and concatenate encoded features
                     new_data = new_data.drop(columns=categorical_cols, errors="ignore")
-                    new_data = pd.concat([new_data.reset_index(drop=True), encoded_df.reset_index(drop=True)], axis=1)
+                    new_data = pd.concat([new_data, encoded_df], axis=1)
 
                     # Ensure numeric data and handle NaN values
                     new_data = new_data.apply(pd.to_numeric, errors='coerce')
                     new_data = new_data.fillna(0)
+
+                    # Align with scaler's expected feature set
+                    st.write("Aligning with scaler's feature set...")
+                    if len(new_data.columns) != scaler.n_features_in_:
+                        st.error("Feature mismatch: Ensure the uploaded dataset has the same features as the training dataset.")
+                        st.stop()
 
                     # Scale the data
                     st.write("Scaling numerical features...")

@@ -148,6 +148,7 @@ try:
     else:  # Correctly placed and aligned else block
         st.error("No model selected.")
         st.stop()
+    
     # Train the model and predict
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
@@ -192,10 +193,7 @@ try:
         plt.legend(loc="upper left")
         plt.tight_layout()
         st.pyplot(plt.gcf())
-
     
-
-
 except Exception as e:
     st.error(f"An error occurred during model training or evaluation: {str(e)}")
 

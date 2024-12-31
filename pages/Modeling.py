@@ -205,3 +205,5 @@ st.write(encoded_summary.describe())
 # Step 12: Save the model to session state
 st.session_state['model'] = model
 st.success(f"{model_choice} model training completed successfully!")
+st.session_state['encoder'] = encoder
+st.session_state['scaler'] = scaler

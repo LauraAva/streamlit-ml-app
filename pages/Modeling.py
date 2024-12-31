@@ -217,15 +217,21 @@ st.session_state['encoder'] = encoder
 st.session_state['scaler'] = scaler
 
 # Step 13: Save and download preprocessed data
+# Save and download preprocessed data
+st.write("### Download Preprocessed Dataset")
 preprocessed_data = pd.concat([X, y.reset_index(drop=True)], axis=1)
-preprocessed_data.to_csv("preprocessed_dataset.csv", index=False)
 
+# Convert preprocessed dataset to CSV and encode it
+csv_data = preprocessed_data.to_csv(index=False).encode("utf-8")
+
+# Add download button
 st.download_button(
     label="Download Preprocessed Dataset",
-    data=preprocessed_data.to_csv(index=False),
+    data=csv_data,
     file_name="preprocessed_dataset.csv",
     mime="text/csv"
 )
+
 
 
 

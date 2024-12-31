@@ -17,12 +17,13 @@ if uploaded_file is not None:
 else:
     st.warning("Please upload a dataset.")
 
-# Load model, encoder, and scaler from session state
+# Load model, scaler, and expected features from session state
 model = st.session_state.get('model', None)
 scaler = st.session_state.get('scaler', None)
+expected_features = st.session_state.get('expected_features', None)
 
-if not model or not scaler:
-    st.warning("Please train a model first in the 'Model Training' section.")
+if not model or not scaler or not expected_features:
+    st.warning("Please ensure the model, scaler, and expected features are saved during training.")
 else:
     # File upload widget for new data
     uploaded_pred_file = st.file_uploader("Upload a new CSV file for predictions", type=["csv"])
@@ -32,19 +33,13 @@ else:
         st.dataframe(new_data.head())
 
         try:
-            # Align features with the trained dataset
-            st.write("Aligning features with the trained dataset...")
-            expected_features = st.session_state.get("expected_features", None)
-            if expected_features is None:
-                st.error("Expected feature list is missing. Please ensure you have saved it during training.")
-                st.stop()
-
-            # Ensure all features in the expected schema are present
+            # Align features with the expected schema
+            st.write("Aligning features with the expected schema...")
             for feature in expected_features:
                 if feature not in new_data.columns:
-                    new_data[feature] = 0  # Add missing features with default value
+                    new_data[feature] = 0  # Add missing features with a default value
 
-            # Reorder columns to match the trained dataset's schema
+            # Reorder columns to match the expected feature order
             new_data = new_data[expected_features]
 
             # Scale the data

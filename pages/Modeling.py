@@ -11,6 +11,7 @@ from utils import setup_sidebar
 from sklearn.exceptions import ConvergenceWarning
 import warnings
 from sklearn.feature_selection import VarianceThreshold
+import pickle
 
 # Set up the sidebar
 setup_sidebar()
@@ -207,3 +208,26 @@ st.session_state['model'] = model
 st.success(f"{model_choice} model training completed successfully!")
 st.session_state['encoder'] = encoder
 st.session_state['scaler'] = scaler
+
+#####
+
+# Save the model, encoder, and scaler to a file
+model_artifacts = {
+    'model': st.session_state['model'],
+    'encoder': st.session_state['encoder'],
+    'scaler': st.session_state['scaler']
+}
+
+artifact_filename = "model_artifacts.pkl"
+with open(artifact_filename, "wb") as f:
+    pickle.dump(model_artifacts, f)
+
+# Add a download button for the artifacts
+st.write("### Download Trained Model and Preprocessing Artifacts")
+with open(artifact_filename, "rb") as f:
+    st.download_button(
+        label="Download Model Artifacts",
+        data=f,
+        file_name=artifact_filename,
+        mime="application/octet-stream"
+    )

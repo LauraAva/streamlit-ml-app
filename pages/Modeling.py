@@ -30,11 +30,13 @@ if dataset_choice == "Original Dataset":
     uploaded_file = st.file_uploader("Upload the Original Dataset (CSV)", type=["csv"])
     if uploaded_file is not None:
         df = pd.read_csv(uploaded_file)
+        st.session_state['data'] = df  # Save dataset to session state
         st.success("Original dataset loaded successfully!")
 else:
     uploaded_file = st.file_uploader("Upload the Fake Dataset (CSV)", type=["csv"])
     if uploaded_file is not None:
         df = pd.read_csv(uploaded_file)
+        st.session_state['data'] = df  # Save dataset to session state
         st.success("Fake dataset loaded successfully!")
 
 if uploaded_file is None:

@@ -136,15 +136,13 @@ try:
 
     elif model_choice == "Logistic Regression":
         st.write("Training Logistic Regression...")
-        model = LogisticRegression(max_iter=500, solver='saga', tol=1e-3,  n_jobs=-1, class_weight='balanced')
-        
+        model = LogisticRegression(max_iter=500, solver='saga', tol=1e-3,  n_jobs=-1, class_weight='balanced'
+        )
         import time
         start_time = time.time()
         model.fit(X_train, y_train)
         end_time = time.time()
-    
-        st.write(f"Logistic Regression training took {end_time - start_time:.2f} seconds.")
-        
+        st.write(f"Logistic Regression training took {end_time - start_time:.2f} seconds.")      
     else:
         st.error("No model selected.")
         st.stop()

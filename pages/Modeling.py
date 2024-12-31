@@ -11,7 +11,7 @@ from utils import setup_sidebar
 from sklearn.exceptions import ConvergenceWarning
 import warnings
 from sklearn.feature_selection import VarianceThreshold
-import pickle
+
 
 # Set up the sidebar
 setup_sidebar()
@@ -19,19 +19,26 @@ setup_sidebar()
 st.title("🧪Model Training and Evaluation")
 st.write("Upload your dataset here or use the preloaded dataset.")
 
+# Step 1: Dataset selection
+dataset_choice = st.radio(
+    "Choose the dataset to use for training:",
+    options=["Original Dataset", "Fake Dataset"]
+)
+
 # File upload widget
-uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
-if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file)
-    st.session_state['data'] = df
-    st.success("Dataset loaded successfully!")
+if dataset_choice == "Original Dataset":
+    uploaded_file = st.file_uploader("Upload the Original Dataset (CSV)", type=["csv"])
+    if uploaded_file is not None:
+        df = pd.read_csv(uploaded_file)
+        st.success("Original dataset loaded successfully!")
 else:
-    st.warning("Please upload a dataset.")
+    uploaded_file = st.file_uploader("Upload the Fake Dataset (CSV)", type=["csv"])
+    if uploaded_file is not None:
+        df = pd.read_csv(uploaded_file)
+        st.success("Fake dataset loaded successfully!")
 
-
-# Step 1: Retrieve dataset from session state
-if 'data' not in st.session_state or st.session_state['data'] is None:
-    st.error("No dataset found! Please upload or load a dataset from the 'Data Loading' page first.")
+if uploaded_file is None:
+    st.warning("Please upload a dataset to proceed.")
     st.stop()
 
 df = st.session_state['data']  # Retrieve dataset
@@ -209,25 +216,17 @@ st.success(f"{model_choice} model training completed successfully!")
 st.session_state['encoder'] = encoder
 st.session_state['scaler'] = scaler
 
-#####
+# Step 13: Save and download preprocessed data
+preprocessed_data = pd.concat([X, y.reset_index(drop=True)], axis=1)
+preprocessed_data.to_csv("preprocessed_dataset.csv", index=False)
 
-# Save the model, encoder, and scaler to a file
-model_artifacts = {
-    'model': st.session_state['model'],
-    'encoder': st.session_state['encoder'],
-    'scaler': st.session_state['scaler']
-}
+st.download_button(
+    label="Download Preprocessed Dataset",
+    data=preprocessed_data.to_csv(index=False),
+    file_name="preprocessed_dataset.csv",
+    mime="text/csv"
+)
 
-artifact_filename = "model_artifacts.pkl"
-with open(artifact_filename, "wb") as f:
-    pickle.dump(model_artifacts, f)
 
-# Add a download button for the artifacts
-st.write("### Download Trained Model and Preprocessing Artifacts")
-with open(artifact_filename, "rb") as f:
-    st.download_button(
-        label="Download Model Artifacts",
-        data=f,
-        file_name=artifact_filename,
-        mime="application/octet-stream"
-    )
+
+    

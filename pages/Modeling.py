@@ -165,6 +165,8 @@ try:
 
     # Save the trained model in session state
     st.session_state['model'] = model
+    # Save expected feature list
+    st.session_state['expected_features'] = X.columns.tolist()
 
     # Evaluation metrics
     st.write(f"**Accuracy:** {accuracy_score(y_test, y_pred):.2f}")

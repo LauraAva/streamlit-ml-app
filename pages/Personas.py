@@ -109,6 +109,7 @@ with col6:
         """,
         unsafe_allow_html=True,
     )
+    
 # Add a horizontal line for separation
 st.markdown("---")
 
@@ -121,20 +122,40 @@ col7, col8, col9 = st.columns(3)
 # First Persona
 with col7:
     st.image("Persona 1 highemission Europe.jpg", caption="Western Europe Persona")
-    st.write("**Demographics:** Small-town residents, primarily Upper-Class individuals in the 30–49 years range.")
-    st.markdown("<div style='min-height: 100px;'></div>", unsafe_allow_html=True)
-    st.write("**Insight:** Consumption of luxury goods and reliance on imported energy sources contribute to this group’s high emissions.")
+    st.markdown(
+        """
+        <div class="persona-container">
+            <p><strong>Demographics:</strong> Small-town residents, primarily Upper-Class individuals in the 30–49 years range.</p>
+            <p><strong>Insight:</strong> Consumption of luxury goods and reliance on imported energy sources contribute to this group’s high emissions.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 # Second Persona
 with col8:
     st.image("Persona 2 highemission 5-6 USA.jpg", caption="North America Persona")
-    st.write("**Demographics:** Rural Middle-Class and Upper-Class, with significant contributions from the 50–64 years age group.")
-    st.markdown("<div style='min-height: 100px;'></div>", unsafe_allow_html=True)
-    st.write("**Insight:** High per capita energy consumption in rural areas exacerbates emissions, driven by vehicle dependency and large residential footprints.")
-
+    st.markdown(
+        """
+        <div class="persona-container">
+            <p><strong>Demographics:</strong> Rural Middle-Class and Upper-Class, with significant contributions from the 50–64 years age group.</p>
+            <p><strong>Insight:</strong> High per capita energy consumption in rural areas exacerbates emissions, driven by vehicle dependency and large residential footprints.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    
 # Third Persona
 with col9:
     st.image("Persona 3 highemission Asia.jpg", caption="Asia Persona")
-    st.write("**Demographics:** Rural and Urban Upper-Class with representation from younger to older (15–64 years).")
-    st.markdown("<div style='min-height: 100px;'></div>", unsafe_allow_html=True)
-    st.write("**Insight:** Industrial reliance and slower adaptation in rural areas contribute heavily to emissions.")
+   st.markdown(
+        """
+        <div class="persona-container">
+            <p><strong>Demographics:</strong> Rural and Urban Upper-Class with representation from younger to older (15–64 years).</p>
+            <p><strong>Insight:</strong> Industrial reliance and slower adaptation in rural areas contribute heavily to emissions.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+# Add a horizontal line for separation
+st.markdown("---")

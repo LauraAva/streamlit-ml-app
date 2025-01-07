@@ -51,7 +51,7 @@ col4, col5, col6 = st.columns(3)
 
 # First Persona
 with col4:
-    st.image("Persona 1 middleemission  Europe.jpg", caption=""Western Europe Persona - Middle Emission Class 3-4")
+    st.image("Persona 1 middleemission  Europe.jpg", caption="Western Europe Persona - Middle Emission Class 3-4")
     st.write("""
     **Demographics:**  
      Suburban areas, Middle-Class dominance, with a tilt toward younger populations (15–29 years).
@@ -60,24 +60,24 @@ with col4:
     Moderate emissions result from seasonal heating demands despite high environmental awareness. 
     """)
 
-
+# Second Persona
 with col5:
-
-    st.image("Persona 1 middleemission  Europe.jpg", caption="China Persona")
+    st.image("Persona 1 middleemission USA.jpg", caption="North America Persona - Middle Emission Class 3-4")
     st.write("""
     **Demographics:**  
-    Predominantly Urban with representation from Middle-Class and Underprivileged groups; age distribution skewed toward the 30–49 years bracket.  
-   
+     Suburban populations, with a higher proportion of Middle-Class individuals and diverse age groups (15–49 years).
+ 
     **Insight:**  
-    Rapid industrialization and urban expansion contribute to emissions, despite government efforts for greener policies.
+    Historical dependence on legacy systems for heating and energy contributes to moderate emission levels.
     """)
     
 # Third Persona
 with col6:
-    st.image("path_to_image/persona6.png", caption="Sweden Persona")
+    st.image("Persona 3 middleemission 3-4 Asia.jpg", caption="Asia Persona - Middle Emission Class 3-4")
     st.write("""
     **Demographics:**  
-    Suburban areas, Middle-Class dominance, with a tilt toward younger populations (15–29 years).  
+      Predominantly Urban with representation from Middle-Class and Underprivileged groups; age distribution is skewed toward the 30–49 years bracket.
+    
     **Insight:**  
-    Moderate emissions result from seasonal heating demands despite high environmental awareness.
+    Rapid industrialization and urban expansion contribute to emissions, despite government efforts for greener policies.  
     """)

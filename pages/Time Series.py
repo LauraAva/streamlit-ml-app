@@ -3,8 +3,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from statsmodels.tsa.seasonal import seasonal_decompose
 
-
-
 # Title
 st.title("CO2 Emission Time Series Analysis")
 
@@ -24,51 +22,52 @@ if uploaded_file:
     st.write("Data Preview:", data.head())
     st.write(f"Total Rows: {len(data)}")
 
-# Ensure the dataset contains the required columns
-if 'year' in data.columns and 'CO2_emission' in data.columns:
-    # Set index to 'year'
-    df_time_series = data[['year', 'CO2_emission']].set_index('year')
+    # Ensure the dataset contains the required columns
+    if 'year' in data.columns and 'CO2_emission' in data.columns:
+        # Convert 'year' column to datetime if it isn't already
+        if not pd.api.types.is_datetime64_any_dtype(data['year']):
+            data['year'] = pd.to_datetime(data['year'], errors='coerce')
 
-    # Check for missing values
-    st.write("Checking for missing values...")
-    st.write(df_time_series.isnull().sum())
+        # Drop rows where 'year' couldn't be converted to datetime
+        data = data.dropna(subset=['year'])
 
-    df_time_series['year'] = df_time_series['year'].astype(str)
-    df_time_series['year'] = pd.to_datetime(df_time_series['year'])
-    
+        # Set index to 'year'
+        df_time_series = data[['year', 'CO2_emission']].set_index('year')
 
-    # Handle missing values
-    df_time_series = df_time_series.dropna()  # Option 1: Drop rows with missing values
-    # df_time_series = df_time_series.fillna(method='ffill')  # Option 2: Forward fill
-    # df_time_series = df_time_series.interpolate(method='linear')  # Option 3: Interpolation
+        # Check for missing values
+        st.write("Checking for missing values...")
+        st.write(df_time_series.isnull().sum())
 
-    # Time Series Decomposition
-    st.header("Time Series Decomposition")
+        # Handle missing values
+        df_time_series = df_time_series.dropna()  # Drop rows with missing values
 
-    if not df_time_series.empty:
-        decomposition = seasonal_decompose(df_time_series, model="multiplicative", period=12)
+        # Time Series Decomposition
+        st.header("Time Series Decomposition")
 
-        # Plot the decomposition
-        fig, axes = plt.subplots(4, 1, figsize=(10, 8))
-        axes[0].plot(decomposition.observed, label='Observed')
-        axes[0].legend(loc='upper left')
-        axes[1].plot(decomposition.trend, label='Trend')
-        axes[1].legend(loc='upper left')
-        axes[2].plot(decomposition.seasonal, label='Seasonal')
-        axes[2].legend(loc='upper left')
-        axes[3].plot(decomposition.resid, label='Residual')
-        axes[3].legend(loc='upper left')
+        if not df_time_series.empty:
+            decomposition = seasonal_decompose(df_time_series, model="multiplicative", period=12)
 
-        plt.tight_layout()
-        st.pyplot(fig)
+            # Plot the decomposition
+            fig, axes = plt.subplots(4, 1, figsize=(10, 8))
+            axes[0].plot(decomposition.observed, label='Observed')
+            axes[0].legend(loc='upper left')
+            axes[1].plot(decomposition.trend, label='Trend')
+            axes[1].legend(loc='upper left')
+            axes[2].plot(decomposition.seasonal, label='Seasonal')
+            axes[2].legend(loc='upper left')
+            axes[3].plot(decomposition.resid, label='Residual')
+            axes[3].legend(loc='upper left')
 
-        # Observations
-        st.write("### Observations")
-        st.write("- **Observed:** The actual time series values.")
-        st.write("- **Trend:** The underlying trend in the data.")
-        st.write("- **Seasonal:** Recurring patterns over time.")
-        st.write("- **Residual:** Noise or unexplained variations.")
+            plt.tight_layout()
+            st.pyplot(fig)
+
+            # Observations
+            st.write("### Observations")
+            st.write("- **Observed:** The actual time series values.")
+            st.write("- **Trend:** The underlying trend in the data.")
+            st.write("- **Seasonal:** Recurring patterns over time.")
+            st.write("- **Residual:** Noise or unexplained variations.")
+        else:
+            st.error("Time series data is empty after handling missing values.")
     else:
-        st.error("Time series data is empty after handling missing values.")
-else:
-    st.error("Dataset must contain 'year' and 'CO2_emission' columns.")
+        st.error("Dataset must contain 'year' and 'CO2_emission' columns.")

@@ -58,10 +58,16 @@ if uploaded_file:
         st.write("Applying log transformation to CO2_emission...")
         df_time_series['CO2_emission'] = np.log1p(df_time_series['CO2_emission'])
 
+        # Ensure no zero or negative values
+        if df_time_series['CO2_emission'].min() <= 0:
+            st.write("Shifting values to handle zero or negative CO2_emission...")
+            df_time_series['CO2_emission'] = df_time_series['CO2_emission'] + 1e-6
+
         # Time Series Decomposition
         st.header("Time Series Decomposition")
         try:
-            decomposition = seasonal_decompose(df_time_series, model="multiplicative", period=12)
+            # Choose "additive" or "multiplicative" model
+            decomposition = seasonal_decompose(df_time_series, model="additive", period=12)
 
             # Plot the decomposition
             fig, axes = plt.subplots(4, 1, figsize=(10, 8))

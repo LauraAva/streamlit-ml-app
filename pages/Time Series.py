@@ -12,14 +12,18 @@ st.header("Upload CO2 Dataset")
 # Upload and process data in chunks
 uploaded_file = st.file_uploader("Upload your time series file", type=["csv", "parquet"])
 
+uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"])
 if uploaded_file:
-    # For large CSV files
-    chunk_size = 100000  # Adjust chunk size as needed
-    if uploaded_file.name.endswith(".csv"):
-        chunks = pd.read_csv(uploaded_file, chunksize=chunk_size)
-        data = pd.concat(chunks)  # Combine chunks if needed
-    elif uploaded_file.name.endswith(".parquet"):
-        data = pd.read_parquet(uploaded_file)
+    # Stream data in chunks
+    chunk_size = 100000
+    chunks = pd.read_csv(uploaded_file, chunksize=chunk_size)
+
+    # Process or display chunks one by one
+    for i, chunk in enumerate(chunks):
+        st.write(f"Chunk {i+1}", chunk.head())
+        if i == 2:  # Limit to first 3 chunks for demonstration
+            break
+
     
     st.write("Data Preview:", data.head())
     st.write(f"Total Rows: {len(data)}")

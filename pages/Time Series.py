@@ -1,3 +1,27 @@
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+from statsmodels.tsa.seasonal import seasonal_decompose
+
+# Title
+st.title("CO2 Emission Time Series Analysis")
+
+# Upload Dataset
+st.header("Upload CO2 Dataset")
+
+# Upload and process data
+uploaded_file = st.file_uploader("Upload your time series file", type=["csv", "parquet"])
+if uploaded_file:
+    # Check file extension and read accordingly
+    if uploaded_file.name.endswith('.csv'):
+        data = pd.read_csv(uploaded_file)
+    elif uploaded_file.name.endswith('.parquet'):
+        data = pd.read_parquet(uploaded_file)
+
+    # Display data preview
+    st.write("Data Preview:", data.head())
+    st.write(f"Total Rows: {len(data)}")
+
 # Ensure the dataset contains the required columns
 if 'year' in data.columns and 'CO2_emission' in data.columns:
     # Set index to 'year'

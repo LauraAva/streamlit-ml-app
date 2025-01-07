@@ -92,7 +92,7 @@ st.markdown("---")
 st.header("High Emission Class (Class 5-6)")
 
 # Create three columns for the next personas
-col7, col8, col8 = st.columns(3)
+col7, col8, col9 = st.columns(3)
 
 # First Persona
 with col7:
@@ -121,7 +121,7 @@ with col9:
     st.image("Persona 3 highemission Asia.jpg", caption="Asia Persona")
     st.write("""
     **Demographics:**  
-      Rural and Urban Upper-Class with representation from younger to older (15–64 years).
+    Rural and Urban Upper-Class with representation from younger to older (15–64 years).
  
     **Insight:**  
     Industrial reliance and slower adaptation in rural areas contribute heavily to emissions.

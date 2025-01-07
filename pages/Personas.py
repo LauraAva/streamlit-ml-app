@@ -148,7 +148,7 @@ with col8:
 # Third Persona
 with col9:
     st.image("Persona 3 highemission Asia.jpg", caption="Asia Persona")
-   st.markdown(
+    st.markdown(
         """
         <div class="persona-container">
             <p><strong>Demographics:</strong> Rural and Urban Upper-Class with representation from younger to older (15–64 years).</p>

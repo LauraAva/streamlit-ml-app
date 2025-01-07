@@ -1,8 +1,6 @@
 import streamlit as st
 import requests
 
-# Set up the sidebar
-setup_sidebar()
 
 # Title
 st.title("👫Personas by CO2 Emission Class")

@@ -8,15 +8,33 @@ st.title("👫Personas by CO2 Emission Class")
 # Add another header for the next class
 st.header("Low Emission Class (Class 1-2)")
 
+# Define CSS for consistent alignment
+st.markdown("""
+    <style>
+    .persona-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 250px; /* Adjust height to match the longest content */
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # Create three columns for personas
 col1, col2, col3 = st.columns(3)
 
 ## First Persona
 with col1:
     st.image ("persona 1 lowemission 1-2 Europe.jpg", caption ="Western Europe Persona")
-    st.write("**Demographics:** Urban dwellers, predominantly Middle-Class, with a significant proportion in the 15–29 years age range.")
-    st.markdown("<div style='min-height: 100px;'></div>", unsafe_allow_html=True)
-    st.write("**Insight:** This group is eco-conscious and likely benefits from advanced infrastructure supporting public transportation and renewable energy initiatives.")
+    st.markdown(
+        """
+        <div class="persona-container">
+            <p><strong>Demographics:</strong> Urban dwellers, predominantly Middle-Class, with a significant proportion in the 15–29 years age range.</p>
+            <p><strong>Insight:</strong> This group is eco-conscious and likely benefits from advanced infrastructure supporting public transportation and renewable energy initiatives.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 # Second Persona
 with col2:

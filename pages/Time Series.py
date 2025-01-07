@@ -10,16 +10,8 @@ st.title("CO2 Emission Time Series Analysis")
 st.header("Upload CO2 Dataset")
 
 
-# Load the large CSV
-data = pd.read_csv('large_file.csv')
-
-# Save as Parquet
-data.to_parquet('large_file.parquet', compression='snappy')  # Use compression to reduce size
-
 # Upload and process data in chunks
 uploaded_file = st.file_uploader("Upload your time series file", type=["csv", "parquet"])
-
-uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"])
 if uploaded_file:
     # Stream data in chunks
     chunk_size = 100000

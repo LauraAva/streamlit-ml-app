@@ -20,9 +20,6 @@ if uploaded_file:
     elif uploaded_file.name.endswith('.parquet'):
         data = pd.read_parquet(uploaded_file)
 
-df['year'] = df['year'].astype(str)
-df['year'] = pd.to_datetime(df['year'])
-    
     # Display data preview
     st.write("Data Preview:", data.head())
     st.write(f"Total Rows: {len(data)}")
@@ -35,6 +32,10 @@ if 'year' in data.columns and 'CO2_emission' in data.columns:
     # Check for missing values
     st.write("Checking for missing values...")
     st.write(df_time_series.isnull().sum())
+
+    df_time_series['year'] = df_time_series['year'].astype(str)
+    df_time_series['year'] = pd.to_datetime(df_time_series['year'])
+    
 
     # Handle missing values
     df_time_series = df_time_series.dropna()  # Option 1: Drop rows with missing values

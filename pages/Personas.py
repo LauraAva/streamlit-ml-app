@@ -14,6 +14,7 @@ with col1:
     st.write("""
     ***Demographics:***
     Urban dwellers, predominantly Middle-Class, with a significant proportion in the 15–29 years age range.
+   
     ***Insight:***
     This group is eco-conscious and likely benefits from advanced infrastructure supporting public transportation and renewable energy initiatives.
     """)
@@ -24,6 +25,7 @@ with col2:
     st.write("""
     **Demographics:**  
     City dwellers, mostly Upper-Class, with noticeable participation from the 30–49 years age range.  
+  
     **Insight:**  
     Luxury consumption patterns are mitigated by access to advanced green technologies.
     """)
@@ -34,6 +36,7 @@ with col3:
     st.write("""
     **Demographics:**  
     Small-town and rural populations with Middle-Class representation, primarily in the 30–49 years age range.  
+   
     **Insight:**  
     Investments in sustainable urban planning are showing results, though rural areas still lag.
     """)
@@ -48,24 +51,27 @@ col4, col5, col6 = st.columns(3)
 
 # First Persona
 with col4:
-    st.image("path_to_image/persona4.png", caption="China Persona")
+    st.image("Persona 1 middleemission  Europe.jpg", caption=""Western Europe Persona - Middle Emission Class 3-4")
+    st.write("""
+    **Demographics:**  
+     Suburban areas, Middle-Class dominance, with a tilt toward younger populations (15–29 years).
+    
+    **Insight:**  
+    Moderate emissions result from seasonal heating demands despite high environmental awareness. 
+    """)
+
+
+with col5:
+
+    st.image("Persona 1 middleemission  Europe.jpg", caption="China Persona")
     st.write("""
     **Demographics:**  
     Predominantly Urban with representation from Middle-Class and Underprivileged groups; age distribution skewed toward the 30–49 years bracket.  
+   
     **Insight:**  
     Rapid industrialization and urban expansion contribute to emissions, despite government efforts for greener policies.
     """)
-
-# Second Persona
-with col5:
-    st.image("path_to_image/persona5.png", caption="Italy Persona")
-    st.write("""
-    **Demographics:**  
-    Suburban populations, with a higher proportion of Middle-Class individuals and diverse age groups (15–49 years).  
-    **Insight:**  
-    Historical dependence on legacy systems for heating and energy contributes to moderate emission levels.
-    """)
-
+    
 # Third Persona
 with col6:
     st.image("path_to_image/persona6.png", caption="Sweden Persona")

@@ -39,12 +39,11 @@ with col1:
     st.markdown(
         """
          <div class="persona-container">
-            <div class="persona-header">Demographics:</div>
-            <div class="persona-text">Urban dwellers, predominantly Middle-Class, with a significant proportion in the 15–29 years age range.</div>
-            <div class="persona-header">Insight:</div>
-            <div class="persona-text">This group is eco-conscious and likely benefits from advanced infrastructure supporting public transportation and renewable energy initiatives.</div>
+            <p><strong>Demographics:</strong> Urban dwellers, predominantly Middle-Class, with a significant proportion in the 15–29 years age range.</p>
+            <p><strong>Insight:</strong> This group is eco-conscious and likely benefits from advanced infrastructure supporting public transportation and renewable energy initiatives.</p>
         </div>
-        """, unsafe_allow_html=True
+        """,
+        unsafe_allow_html=True,
     )
 
 # Second Persona
@@ -53,27 +52,27 @@ with col2:
     st.markdown(
         """
        <div class="persona-container">
-            <div class="persona-header">Demographics:</div>
-            <div class="persona-text">City dwellers, mostly Upper-Class, with noticeable participation from the 30–49 years age range.</div>
-            <div class="persona-header">Insight:</div>
-            <div class="persona-text">Luxury consumption patterns are mitigated by access to advanced green technologies.</div>
+            <p><strong>Demographics:</strong> City dwellers, mostly Upper-Class, with noticeable participation from the 30–49 years age range.</p>
+            <p><strong>Insight:</strong> Luxury consumption patterns are mitigated by access to advanced green technologies.</p>
         </div>
-        """, unsafe_allow_html=True
+        """,
+        unsafe_allow_html=True,
     )
+
     
 # Third Persona
 with col3:
     st.image("persona 3 lowemission 1-2 Asia.jpg", caption="Asia Persona")
     st.markdown(
         """
-         <div class="persona-container">
-            <div class="persona-header">Demographics:</div>
-            <div class="persona-text">Small-town and rural populations with Middle-Class representation, primarily in the 30–49 years age range.</div>
-            <div class="persona-header">Insight:</div>
-            <div class="persona-text">Investments in sustainable urban planning are showing results, though rural areas still lag.</div>
+        <div class="persona-container">
+            <p><strong>Demographics:</strong> Small-town and rural populations with Middle-Class representation, primarily in the 30–49 years age range.</p>
+            <p><strong>Insight:</strong> Investments in sustainable urban planning are showing results, though rural areas still lag.</p>
         </div>
-        """, unsafe_allow_html=True
+        """,
+        unsafe_allow_html=True,
     )
+
     
 # Add a horizontal line for separation
 st.markdown("---")

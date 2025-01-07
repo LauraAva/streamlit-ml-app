@@ -22,7 +22,7 @@ This group is eco-conscious and likely benefits from advanced infrastructure sup
 
 # Second Persona
 with col2:
-    st.image("path_to_image/persona2.png", caption="North America Persona")
+    st.image("pRIFF��", caption="North America Persona")
     st.write("""
     **Demographics:**  
     City dwellers, mostly Upper-Class, with noticeable participation from the 30–49 years age range.  

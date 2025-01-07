@@ -23,7 +23,7 @@ with col2:
     st.image("persona 2 lowemission 1-2 USA.jpg", caption="North America Persona")
     st.write("**Demographics:** City dwellers, mostly Upper-Class, with noticeable participation from the 30–49 years age range.")  
     st.markdown("<div style='min-height: 100px;'></div>", unsafe_allow_html=True)
-    st.write("**Insight:**Luxury consumption patterns are mitigated by access to advanced green technologies.")
+    st.write("**Insight:** Luxury consumption patterns are mitigated by access to advanced green technologies.")
 
 # Third Persona
 with col3:

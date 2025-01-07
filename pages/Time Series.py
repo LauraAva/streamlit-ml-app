@@ -3,6 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from statsmodels.tsa.seasonal import seasonal_decompose
 
+
+
 # Title
 st.title("CO2 Emission Time Series Analysis")
 
@@ -18,6 +20,9 @@ if uploaded_file:
     elif uploaded_file.name.endswith('.parquet'):
         data = pd.read_parquet(uploaded_file)
 
+df['year'] = df['year'].astype(str)
+df['year'] = pd.to_datetime(df['year'])
+    
     # Display data preview
     st.write("Data Preview:", data.head())
     st.write(f"Total Rows: {len(data)}")

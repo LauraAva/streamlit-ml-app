@@ -2,12 +2,6 @@ import streamlit as st
 import requests
 
 
-# Title
-st.title("👫Personas by CO2 Emission Class")
-
-# Add another header for the next class
-st.header("Low Emission Class (Class 1-2)")
-
 # Define CSS for consistent alignment
 st.markdown("""
     <style>
@@ -15,10 +9,26 @@ st.markdown("""
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        height: 250px; /* Adjust height to match the longest content */
+        height: 250px; /* Adjust height as needed */
+    }
+    .persona-header {
+        font-weight: bold;
+        text-align: center;
+    }
+    .persona-text {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
     </style>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
+
+# Title
+st.title("👫Personas by CO2 Emission Class")
+
+# Add another header for the next class
+st.header("Low Emission Class (Class 1-2)")
 
 # Create three columns for personas
 col1, col2, col3 = st.columns(3)
@@ -28,12 +38,13 @@ with col1:
     st.image ("persona 1 lowemission 1-2 Europe.jpg", caption ="Western Europe Persona")
     st.markdown(
         """
-        <div class="persona-container">
-            <p><strong>Demographics:</strong> Urban dwellers, predominantly Middle-Class, with a significant proportion in the 15–29 years age range.</p>
-            <p><strong>Insight:</strong> This group is eco-conscious and likely benefits from advanced infrastructure supporting public transportation and renewable energy initiatives.</p>
+         <div class="persona-container">
+            <div class="persona-header">Demographics:</div>
+            <div class="persona-text">Urban dwellers, predominantly Middle-Class, with a significant proportion in the 15–29 years age range.</div>
+            <div class="persona-header">Insight:</div>
+            <div class="persona-text">This group is eco-conscious and likely benefits from advanced infrastructure supporting public transportation and renewable energy initiatives.</div>
         </div>
-        """,
-        unsafe_allow_html=True,
+        """, unsafe_allow_html=True
     )
 
 # Second Persona
@@ -41,12 +52,13 @@ with col2:
     st.image("persona 2 lowemission 1-2 USA.jpg", caption="North America Persona")
     st.markdown(
         """
-        <div class="persona-container">
-            <p><strong>Demographics:</strong> City dwellers, mostly Upper-Class, with noticeable participation from the 30–49 years age range.</p>
-            <p><strong>Insight:</strong> Luxury consumption patterns are mitigated by access to advanced green technologies.</p>
+       <div class="persona-container">
+            <div class="persona-header">Demographics:</div>
+            <div class="persona-text">City dwellers, mostly Upper-Class, with noticeable participation from the 30–49 years age range.</div>
+            <div class="persona-header">Insight:</div>
+            <div class="persona-text">Luxury consumption patterns are mitigated by access to advanced green technologies.</div>
         </div>
-        """,
-        unsafe_allow_html=True,
+        """, unsafe_allow_html=True
     )
     
 # Third Persona
@@ -54,12 +66,13 @@ with col3:
     st.image("persona 3 lowemission 1-2 Asia.jpg", caption="Asia Persona")
     st.markdown(
         """
-        <div class="persona-container">
-            <p><strong>Demographics:</strong> Small-town and rural populations with Middle-Class representation, primarily in the 30–49 years age range.</p>
-            <p><strong>Insight:</strong> Investments in sustainable urban planning are showing results, though rural areas still lag.</p>
+         <div class="persona-container">
+            <div class="persona-header">Demographics:</div>
+            <div class="persona-text">Small-town and rural populations with Middle-Class representation, primarily in the 30–49 years age range.</div>
+            <div class="persona-header">Insight:</div>
+            <div class="persona-text">Investments in sustainable urban planning are showing results, though rural areas still lag.</div>
         </div>
-        """,
-        unsafe_allow_html=True,
+        """, unsafe_allow_html=True
     )
     
 # Add a horizontal line for separation

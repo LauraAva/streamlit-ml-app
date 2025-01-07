@@ -90,10 +90,8 @@ with col4:
     st.markdown(
         """
        <div class="persona-container">
-            <div class="persona-header">Demographics:</div>
-            <div class="persona-text">Suburban areas, Middle-Class dominance, with a tilt toward younger populations (15–29 years).</div>
-            <div class="persona-header">Insight:</div>
-            <div class="persona-text">Moderate emissions result from seasonal heating demands despite high environmental awareness.</div>
+            <p><strong>Demographics:</strong> Suburban areas, Middle-Class dominance, with a tilt toward younger populations (15–29 years).</p>
+            <p><strong>Insight:</strong> Moderate emissions result from seasonal heating demands despite high environmental awareness.</p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -105,10 +103,8 @@ with col5:
     st.markdown(
         """
          <div class="persona-container">
-            <div class="persona-header">Demographics:</div>
-            <div class="persona-text">Suburban populations, with a higher proportion of Middle-Class individuals and diverse age groups (15–49 years).</div>
-            <div class="persona-header">Insight:</div>
-            <div class="persona-text">Historical dependence on legacy systems for heating and energy contributes to moderate emission levels.</div>
+            <p><strong>Demographics:</strong> Suburban populations, with a higher proportion of Middle-Class individuals and diverse age groups (15–49 years).</p>
+            <p><strong>Insight:</strong> Historical dependence on legacy systems for heating and energy contributes to moderate emission levels.</p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -120,10 +116,8 @@ with col6:
     st.markdown(
         """
         <div class="persona-container">
-            <div class="persona-header">Demographics:</div>
-            <div class="persona-text">Predominantly Urban with representation from Middle-Class and Underprivileged groups; age distribution is skewed toward the 30–49 years bracket.</div>
-            <div class="persona-header">Insight:</div>
-            <div class="persona-text">Rapid industrialization and urban expansion contribute to emissions, despite government efforts for greener policies.</div>
+            <p><strong>Demographics:</strong> Predominantly Urban with representation from Middle-Class and Underprivileged groups; age distribution is skewed toward the 30–49 years bracket.</p>
+            <p><strong>Insight:</strong> Rapid industrialization and urban expansion contribute to emissions, despite government efforts for greener policies.</p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -145,10 +139,8 @@ with col7:
     st.markdown(
         """
          <div class="persona-container">
-            <div class="persona-header">Demographics:</div>
-            <div class="persona-text">Small-town residents, primarily Upper-Class individuals in the 30–49 years range.</div>
-            <div class="persona-header">Insight:</div>
-            <div class="persona-text">Consumption of luxury goods and reliance on imported energy sources contribute to this group’s high emissions.</div>
+            <p><strong>Demographics:</strong> Small-town residents, primarily Upper-Class individuals in the 30–49 years range.</p>
+            <p><strong>Insight:</strong> Consumption of luxury goods and reliance on imported energy sources contribute to this group’s high emissions.</p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -159,11 +151,9 @@ with col8:
     st.image("Persona 2 highemission 5-6 USA.jpg", caption="North America Persona")
     st.markdown(
         """
-        <div class="persona-container">
-            <div class="persona-header">Demographics:</div>
-            <div class="persona-text">Rural Middle-Class and Upper-Class, with significant contributions from the 50–64 years age group.</div>
-            <div class="persona-header">Insight:</div>
-            <div class="persona-text">High per capita energy consumption in rural areas exacerbates emissions, driven by vehicle dependency and large residential footprints.</div>
+       <div class="persona-container">
+            <p><strong>Demographics:</strong> Rural Middle-Class and Upper-Class, with significant contributions from the 50–64 years age group.</p>
+            <p><strong>Insight:</strong> High per capita energy consumption in rural areas exacerbates emissions, driven by vehicle dependency and large residential footprints.</p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -175,10 +165,8 @@ with col9:
     st.markdown(
         """
         <div class="persona-container">
-            <div class="persona-header">Demographics:</div>
-            <div class="persona-text">Rural and Urban Upper-Class with representation from younger to older (15–64 years).</div>
-            <div class="persona-header">Insight:</div>
-            <div class="persona-text">Industrial reliance and slower adaptation in rural areas contribute heavily to emissions.</div>
+            <p><strong>Demographics:</strong> Rural and Urban Upper-Class with representation from younger to older (15–64 years).</p>
+            <p><strong>Insight:</strong> Industrial reliance and slower adaptation in rural areas contribute heavily to emissions.</p>
         </div>
         """,
         unsafe_allow_html=True,

@@ -39,17 +39,29 @@ with col1:
 # Second Persona
 with col2:
     st.image("persona 2 lowemission 1-2 USA.jpg", caption="North America Persona")
-    st.write("**Demographics:** City dwellers, mostly Upper-Class, with noticeable participation from the 30–49 years age range.")  
-    st.markdown("<div style='min-height: 100px;'></div>", unsafe_allow_html=True)
-    st.write("**Insight:** Luxury consumption patterns are mitigated by access to advanced green technologies.")
-
+    st.markdown(
+        """
+        <div class="persona-container">
+            <p><strong>Demographics:</strong> City dwellers, mostly Upper-Class, with noticeable participation from the 30–49 years age range.</p>
+            <p><strong>Insight:</strong> Luxury consumption patterns are mitigated by access to advanced green technologies.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    
 # Third Persona
 with col3:
     st.image("persona 3 lowemission 1-2 Asia.jpg", caption="Asia Persona")
-    st.write("**Demographics:** Small-town and rural populations with Middle-Class representation, primarily in the 30–49 years age range.")  
-    st.markdown("<div style='min-height: 100px;'></div>", unsafe_allow_html=True)
-    st.write("**Insight:** Investments in sustainable urban planning are showing results, though rural areas still lag.")
-
+    st.markdown(
+        """
+        <div class="persona-container">
+            <p><strong>Demographics:</strong> Small-town and rural populations with Middle-Class representation, primarily in the 30–49 years age range.</p>
+            <p><strong>Insight:</strong> Investments in sustainable urban planning are showing results, though rural areas still lag.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    
 # Add a horizontal line for separation
 st.markdown("---")
 
@@ -62,24 +74,41 @@ col4, col5, col6 = st.columns(3)
 # First Persona
 with col4:
     st.image("Persona 1 middleemission  Europe.jpg", caption="Western Europe Persona")
-    st.write("**Demographics:** Suburban areas, Middle-Class dominance, with a tilt toward younger populations (15–29 years).")
-    st.markdown("<div style='min-height: 100px;'></div>", unsafe_allow_html=True)
-    st.write("**Insight:** Moderate emissions result from seasonal heating demands despite high environmental awareness.")
-
+    st.markdown(
+        """
+        <div class="persona-container">
+            <p><strong>Demographics:</strong> Suburban areas, Middle-Class dominance, with a tilt toward younger populations (15–29 years).</p>
+            <p><strong>Insight:</strong> Moderate emissions result from seasonal heating demands despite high environmental awareness.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    
 # Second Persona
 with col5:
     st.image("Persona 1 middleemission USA.jpg", caption="North America Persona ")
-    st.write("**Demographics:** Suburban populations, with a higher proportion of Middle-Class individuals and diverse age groups (15–49 years).")
-    st.markdown("<div style='min-height: 100px;'></div>", unsafe_allow_html=True)
-    st.write("**Insight:** Historical dependence on legacy systems for heating and energy contributes to moderate emission levels.")
+    st.markdown(
+        """
+        <div class="persona-container">
+            <p><strong>Demographics:</strong> Suburban populations, with a higher proportion of Middle-Class individuals and diverse age groups (15–49 years).</p>
+            <p><strong>Insight:</strong> Historical dependence on legacy systems for heating and energy contributes to moderate emission levels.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
     
 # Third Persona
 with col6:
     st.image("Persona 3 middleemission 3-4 Asia.jpg", caption="Asia Persona")
-    st.write("**Demographics:** Predominantly Urban with representation from Middle-Class and Underprivileged groups; age distribution is skewed toward the 30–49 years bracket.")
-    st.markdown("<div style='min-height: 100px;'></div>", unsafe_allow_html=True)
-    st.write("**Insight:** Rapid industrialization and urban expansion contribute to emissions, despite government efforts for greener policies.")
-
+    st.markdown(
+        """
+        <div class="persona-container">
+            <p><strong>Demographics:</strong> Predominantly Urban with representation from Middle-Class and Underprivileged groups; age distribution is skewed toward the 30–49 years bracket.</p>
+            <p><strong>Insight:</strong> Rapid industrialization and urban expansion contribute to emissions, despite government efforts for greener policies.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 # Add a horizontal line for separation
 st.markdown("---")
 

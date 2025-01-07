@@ -8,20 +8,22 @@ st.title("CO2 Emission Time Series Analysis")
 
 # Upload Dataset
 st.header("Upload CO2 Dataset")
-uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"])
+
+# Upload and process data in chunks
+uploaded_file = st.file_uploader("Upload your time series file", type=["csv", "parquet"])
 
 if uploaded_file:
-    # Load the dataset
-    df = pd.read_csv(uploaded_file)
-
-    # Preprocessing
-    st.subheader("Preprocessing the Dataset")
-    df['year'] = pd.to_datetime(df['year'], errors='coerce')
-    df = df.dropna(subset=['year', 'CO2_emission'])  # Drop rows with missing year or CO2 values
-    df['CO2_emission'] = pd.to_numeric(df['CO2_emission'], errors='coerce')
+    # For large CSV files
+    chunk_size = 100000  # Adjust chunk size as needed
+    if uploaded_file.name.endswith(".csv"):
+        chunks = pd.read_csv(uploaded_file, chunksize=chunk_size)
+        data = pd.concat(chunks)  # Combine chunks if needed
+    elif uploaded_file.name.endswith(".parquet"):
+        data = pd.read_parquet(uploaded_file)
     
-    st.write("Preview of the dataset:")
-    st.write(df.head())
+    st.write("Data Preview:", data.head())
+    st.write(f"Total Rows: {len(data)}")
+
 
     # Time Series Decomposition
     st.header("Time Series Decomposition")

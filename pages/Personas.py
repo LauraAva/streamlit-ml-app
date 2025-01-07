@@ -18,7 +18,7 @@ with col1:
     (**Demographics:** Urban dwellers, predominantly Middle-Class, with a significant proportion in the 15–29 years age range.)
    """)
    st.markdown("<div style='min-height: 100px;'></div>", unsafe_allow_html=True)
-   ("""
+   st.write("""
     **Insight:**This group is eco-conscious and likely benefits from advanced infrastructure supporting public transportation and renewable energy initiatives.
     """)
 

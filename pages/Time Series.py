@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from statsmodels.tsa.seasonal import seasonal_decompose
+import numpy as np
 
 # Title
 st.title("CO2 Emission Time Series Analysis")
@@ -19,32 +20,47 @@ if uploaded_file:
         data = pd.read_parquet(uploaded_file)
 
     # Display data preview
-    st.write("Data Preview:", data.head())
+    st.write("Data Preview:")
+    st.write(data.head())
     st.write(f"Total Rows: {len(data)}")
 
     # Ensure the dataset contains the required columns
     if 'year' in data.columns and 'CO2_emission' in data.columns:
-        # Convert 'year' column to datetime if it isn't already
+        # Convert 'year' to datetime
         if not pd.api.types.is_datetime64_any_dtype(data['year']):
             data['year'] = pd.to_datetime(data['year'], errors='coerce')
 
-        # Drop rows where 'year' couldn't be converted to datetime
+        # Drop rows with invalid or missing 'year'
         data = data.dropna(subset=['year'])
 
-        # Set index to 'year'
+        # Set 'year' as the index
         df_time_series = data[['year', 'CO2_emission']].set_index('year')
 
-        # Check for missing values
-        st.write("Checking for missing values...")
-        st.write(df_time_series.isnull().sum())
+        # Display summary statistics
+        st.write("Summary Statistics:")
+        st.write(df_time_series.describe())
 
-        # Handle missing values
-        df_time_series = df_time_series.dropna()  # Drop rows with missing values
+        # Check for irregular frequency
+        st.write("Checking index frequency...")
+        freq_counts = df_time_series.index.to_series().diff().value_counts()
+        st.write(freq_counts)
+
+        # Resample data if frequency is irregular
+        if freq_counts.size > 1:
+            st.write("Irregular frequency detected. Resampling to monthly frequency.")
+            df_time_series = df_time_series.resample('M').sum()
+
+        # Handle missing values by interpolation
+        st.write("Interpolating missing values...")
+        df_time_series = df_time_series.interpolate(method='linear')
+
+        # Log-transform the CO2_emission column to handle outliers
+        st.write("Applying log transformation to CO2_emission...")
+        df_time_series['CO2_emission'] = np.log1p(df_time_series['CO2_emission'])
 
         # Time Series Decomposition
         st.header("Time Series Decomposition")
-
-        if not df_time_series.empty:
+        try:
             decomposition = seasonal_decompose(df_time_series, model="multiplicative", period=12)
 
             # Plot the decomposition
@@ -67,7 +83,13 @@ if uploaded_file:
             st.write("- **Trend:** The underlying trend in the data.")
             st.write("- **Seasonal:** Recurring patterns over time.")
             st.write("- **Residual:** Noise or unexplained variations.")
-        else:
-            st.error("Time series data is empty after handling missing values.")
+        except Exception as e:
+            st.error(f"Decomposition failed: {e}")
     else:
         st.error("Dataset must contain 'year' and 'CO2_emission' columns.")
+else:
+    st.write("Please upload a dataset to begin analysis.")
+
+# Footer
+st.markdown("---")
+st.write("This app analyzes CO2 emissions trends using time series decomposition.")

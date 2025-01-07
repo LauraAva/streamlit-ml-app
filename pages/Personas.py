@@ -15,11 +15,11 @@ col1, col2, col3 = st.columns(3)
 with col1:
     st.image ("persona 1 lowemission 1-2 Europe.jpg", caption ="Western Europe Persona")
     st.write("""
-    ***Demographics:***
-    Urban dwellers, predominantly Middle-Class, with a significant proportion in the 15–29 years age range.
-   
-    ***Insight:***
-    This group is eco-conscious and likely benefits from advanced infrastructure supporting public transportation and renewable energy initiatives.
+    (**Demographics:** Urban dwellers, predominantly Middle-Class, with a significant proportion in the 15–29 years age range.)
+   """)
+   st.markdown("<div style='min-height: 100px;'></div>", unsafe_allow_html=True)
+   ("""
+    **Insight:**This group is eco-conscious and likely benefits from advanced infrastructure supporting public transportation and renewable energy initiatives.
     """)
 
 # Second Persona

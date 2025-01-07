@@ -10,7 +10,7 @@ col1, col2, col3 = st.columns(3)
 
 ## First Persona
 with col1:
-    st.image ("persona 1 lowemission 1-2 Europe.jpg", caption ="Western Europe Persona-  Low Emission Class (Class 1-2")
+    st.image ("persona 1 lowemission 1-2 Europe.jpg", caption ="Western Europe Persona - Low Emission Class Class 1-2")
     st.write("""
     ***Demographics:***
     Urban dwellers, predominantly Middle-Class, with a significant proportion in the 15–29 years age range.
@@ -20,7 +20,7 @@ with col1:
 
 # Second Persona
 with col2:
-    st.image("pRIFF��", caption="North America Persona")
+    st.image("persona 2 lowemission 1-2 USA.jpg", caption="North America Persona - Low Emission Class Class 1-2")
     st.write("""
     **Demographics:**  
     City dwellers, mostly Upper-Class, with noticeable participation from the 30–49 years age range.  
@@ -30,7 +30,7 @@ with col2:
 
 # Third Persona
 with col3:
-    st.image("path_to_image/persona3.png", caption="China Persona")
+    st.image("persona 3 lowemission 1-2 Asia.jpg", caption="Asia Persona - Low Emission Class Class 1-2")
     st.write("""
     **Demographics:**  
     Small-town and rural populations with Middle-Class representation, primarily in the 30–49 years age range.  

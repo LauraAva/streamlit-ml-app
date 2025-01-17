@@ -65,8 +65,8 @@ if uploaded_file:
 
         # Check if enough observations exist
         st.write("Number of observations in time series:", len(df_time_series))
-        if len(df_time_series) < 24:
-            st.error("Not enough data for decomposition. At least 24 observations are required.")
+        if len(df_time_series) < 12:
+            st.error("Not enough data for decomposition. At least 12 observations are required.")
         else:
             # Time Series Decomposition
             st.header("Time Series Decomposition")
